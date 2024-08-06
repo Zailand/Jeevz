@@ -58,28 +58,24 @@ def handle_steps():
         if continue_prompt():
             save_presentation(presentation, presentation_path)
             st.session_state['current_step'] = 1
-            st.experimental_rerun()
     elif current_step == 1:
         st.write("Now working on the Hypothesis, Rationale & expected results slide")
         hypothesis_rationale_expected_slide(presentation, presentation_path, shared_data)
         if continue_prompt():
             save_presentation(presentation, presentation_path)
             st.session_state['current_step'] = 2
-            st.experimental_rerun()
     elif current_step == 2:
         st.write("Now working on the Processing slide")
         processing_slide(presentation, presentation_path, shared_data)
         if continue_prompt():
             save_presentation(presentation, presentation_path)
             st.session_state['current_step'] = 3
-            st.experimental_rerun()
     elif current_step == 3:
         st.write("Now working on the Compression conditions slide")
         compression_conditions_slide(presentation, presentation_path, shared_data)
         if continue_prompt():
             save_presentation(presentation, presentation_path)
             st.session_state['current_step'] = 4
-            st.experimental_rerun()
     elif current_step == 4:
         st.write("Now working on the Tablet disintegration slide")
         tablet_disintegration_slide(presentation, presentation_path, shared_data)
@@ -88,6 +84,7 @@ def handle_steps():
     if st.button("Download presentation"):
         if save_presentation(presentation, presentation_path):
             provide_download_link(presentation_path)
+
 
 # Function to save the presentation with error handling
 def save_presentation(presentation, presentation_path):
