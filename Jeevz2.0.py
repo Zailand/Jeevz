@@ -137,6 +137,9 @@ def start_new_project():
     if collect_user_inputs_new_project(presentation, presentation_path, shared_data):
         if save_presentation(presentation, presentation_path):
             provide_download_link(presentation_path)
+    else:
+        if save_presentation(presentation, presentation_path):
+            provide_download_link(presentation_path)
 
 # Function to load an existing project
 def load_existing_project():
@@ -148,6 +151,9 @@ def load_existing_project():
         start_from = continue_from()
 
         if collect_user_inputs(presentation, uploaded_file.name, shared_data, start_from):
+            if save_presentation(presentation, uploaded_file.name):
+                provide_download_link(uploaded_file.name)
+        else:
             if save_presentation(presentation, uploaded_file.name):
                 provide_download_link(uploaded_file.name)
 
