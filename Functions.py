@@ -198,6 +198,7 @@ def title_slide(presentation, presentation_path, shared_data):
     st.success(f"New presentation created and saved as {presentation_path}")
 
 #Cell 2
+#Cell 2
 def hypothesis_rationale_expected_slide(presentation, presentation_path, shared_data):
     from pptx.util import Pt, Inches
     from pptx.dml.color import RGBColor
