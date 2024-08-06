@@ -44,36 +44,42 @@ def handle_steps(presentation, presentation_path, shared_data):
         st.session_state['current_step'] = 0
 
     current_step = st.session_state['current_step']
+    st.write(f"Current step: {current_step}")
 
     if current_step == 0:
         st.write("Now working on the Title Slide")
         title_slide(presentation, presentation_path, shared_data)
         if continue_prompt(key="title_slide"):
             st.session_state['current_step'] = 1
+            st.experimental_rerun()
 
     elif current_step == 1:
         st.write("Now working on the Hypothesis, Rationale & expected results slide")
         hypothesis_rationale_expected_slide(presentation, presentation_path, shared_data)
         if continue_prompt(key="hypothesis_rationale_expected_slide"):
             st.session_state['current_step'] = 2
+            st.experimental_rerun()
 
     elif current_step == 2:
         st.write("Now working on the Processing slide")
         processing_slide(presentation, presentation_path, shared_data)
         if continue_prompt(key="processing_slide"):
             st.session_state['current_step'] = 3
+            st.experimental_rerun()
 
     elif current_step == 3:
         st.write("Now working on the Compression conditions slide")
         compression_conditions_slide(presentation, presentation_path, shared_data)
         if continue_prompt(key="compression_conditions_slide"):
             st.session_state['current_step'] = 4
+            st.experimental_rerun()
 
     elif current_step == 4:
         st.write("Now working on the Tablet disintegration slide")
         tablet_disintegration_slide(presentation, presentation_path, shared_data)
         if continue_prompt(key="tablet_disintegration_slide"):
             st.session_state['current_step'] = 5
+            st.experimental_rerun()
 
     elif current_step == 5:
         if save_presentation(presentation, presentation_path):
