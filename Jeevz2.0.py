@@ -31,9 +31,14 @@ def continue_from():
     )
     return ["Hypothesis, Rationale & expected results", "Processing", "Compression conditions", "Tablet disintegration"].index(choice) + 1
 
-# Function to prompt for continuation
-def continue_prompt():
-    return st.button("Continue")
+# Function to prompt for continuation or stopping
+def continue_prompt(key):
+    col1, col2 = st.columns(2)
+    with col1:
+        continue_clicked = st.button("Continue", key=f"continue_{key}")
+    with col2:
+        stop_clicked = st.button("Stop", key=f"stop_{key}")
+    return continue_clicked, stop_clicked
 
 # Import functions from Functions.ipynb
 with Notebook():
@@ -50,25 +55,37 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
     if start_from <= 1:
         st.write("Now working on the Hypothesis, Rationale & expected results slide")
         hypothesis_rationale_expected_slide(presentation, presentation_path, shared_data)
-        if not continue_prompt():
+        continue_clicked, stop_clicked = continue_prompt(key="1")
+        if stop_clicked:
+            return False
+        if not continue_clicked:
             return False
 
     if start_from <= 2:
         st.write("Now working on the Processing slide")
         processing_slide(presentation, presentation_path, shared_data)
-        if not continue_prompt():
+        continue_clicked, stop_clicked = continue_prompt(key="2")
+        if stop_clicked:
+            return False
+        if not continue_clicked:
             return False
 
     if start_from <= 3:
         st.write("Now working on the Compression conditions slide")
         compression_conditions_slide(presentation, presentation_path, shared_data)
-        if not continue_prompt():
+        continue_clicked, stop_clicked = continue_prompt(key="3")
+        if stop_clicked:
+            return False
+        if not continue_clicked:
             return False
 
     if start_from <= 4:
         st.write("Now working on the Tablet disintegration slide")
         tablet_disintegration_slide(presentation, presentation_path, shared_data)
-        if not continue_prompt():
+        continue_clicked, stop_clicked = continue_prompt(key="4")
+        if stop_clicked:
+            return False
+        if not continue_clicked:
             return False
 
     return True
@@ -77,7 +94,10 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
 def collect_user_inputs_new_project(presentation, presentation_path, shared_data):
     st.write("Now working on the Title Slide")
     title_slide(presentation, presentation_path, shared_data)
-    if not continue_prompt():
+    continue_clicked, stop_clicked = continue_prompt(key="title")
+    if stop_clicked:
+        return False
+    if not continue_clicked:
         return False
 
     if not collect_user_inputs(presentation, presentation_path, shared_data, start_from=1):
