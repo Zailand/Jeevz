@@ -32,8 +32,21 @@ def continue_from():
     return ["Hypothesis, Rationale & expected results", "Processing", "Compression conditions", "Tablet disintegration"].index(choice) + 1
 
 # Function to prompt for continuation
-def continue_prompt():
-    return st.button("Continue")
+def continue_prompt(step):
+    col1, col2, col3 = st.columns([1, 0.1, 1])
+    with col1:
+        if step == 0:
+            return st.button("Continue to Hypothesis slide")
+        elif step == 1:
+            return st.button("Continue to Process slide")
+        elif step == 2:
+            return st.button("Continue to Compression conditions slide")
+        elif step == 3:
+            return st.button("Continue to Disintegration conditions slide")
+    with col2:
+        st.write("or")
+    with col3:
+        return st.button("Download presentation")
 
 # Import functions from Functions.ipynb
 with Notebook():
@@ -50,25 +63,25 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
     if start_from <= 1:
         st.write("Now working on the Hypothesis, Rationale & expected results slide")
         hypothesis_rationale_expected_slide(presentation, presentation_path, shared_data)
-        if not continue_prompt():
+        if not continue_prompt(1):
             return False
 
     if start_from <= 2:
         st.write("Now working on the Processing slide")
         processing_slide(presentation, presentation_path, shared_data)
-        if not continue_prompt():
+        if not continue_prompt(2):
             return False
 
     if start_from <= 3:
         st.write("Now working on the Compression conditions slide")
         compression_conditions_slide(presentation, presentation_path, shared_data)
-        if not continue_prompt():
+        if not continue_prompt(3):
             return False
 
     if start_from <= 4:
         st.write("Now working on the Tablet disintegration slide")
         tablet_disintegration_slide(presentation, presentation_path, shared_data)
-        if not continue_prompt():
+        if not continue_prompt(4):
             return False
 
     return True
@@ -77,7 +90,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
 def collect_user_inputs_new_project(presentation, presentation_path, shared_data):
     st.write("Now working on the Title Slide")
     title_slide(presentation, presentation_path, shared_data)
-    if not continue_prompt():
+    if not continue_prompt(0):
         return False
 
     if not collect_user_inputs(presentation, presentation_path, shared_data, start_from=1):
@@ -105,7 +118,6 @@ def start_new_project():
     if collect_user_inputs_new_project(presentation, presentation_path, shared_data):
         save_presentation(presentation, presentation_path)
 
-# Function to load an existing project
 def load_existing_project():
     st.write("Loading an existing project...")
     uploaded_file = st.file_uploader("Choose a PowerPoint file", type="pptx")
