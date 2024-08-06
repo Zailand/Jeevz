@@ -1,12 +1,4 @@
 #Cell 1
-from pptx.util import Pt, Inches
-from pptx.dml.color import RGBColor
-from pptx.enum.text import PP_ALIGN
-from datetime import datetime
-import json
-import streamlit as st
-
-def title_slide(presentation, presentation_path, shared_data):
     from pptx.util import Pt, Inches
     from pptx.dml.color import RGBColor
     from pptx.enum.text import PP_ALIGN
@@ -16,7 +8,8 @@ def title_slide(presentation, presentation_path, shared_data):
     import os
     from PIL import Image
     import re
-    
+
+def title_slide(presentation, presentation_path, shared_data):
     # Function to get batch number from user
     def get_batch_number():
         batch_number = st.text_input("Enter the batch number (format XXXX-XXXX-XXXX-XX):")
@@ -42,35 +35,6 @@ def title_slide(presentation, presentation_path, shared_data):
         initials = st.text_input("Enter your initials (letters only):")
         eln = st.text_input("Enter ELN number (format xxxxx-xxx):")
         return initials, eln
-
-    # Function to review and edit data
-    def review_and_edit(data, prompt):
-        st.write(f"\n{prompt}")
-        for key, value in data.items():
-            if key == 'excipients':
-                st.write(f"{key}:")
-                for excipient_name, excipient_amount in value:
-                    st.write(f"  - {excipient_name}: {excipient_amount} mg/unit")
-            else:
-                st.write(f"{key}: {value}")
-        edit_choice = st.radio("Would you like to edit any field?", ("No", "Yes"))
-        if edit_choice == 'Yes':
-            field_to_edit = st.selectbox("Enter the field name you want to edit:", list(data.keys()))
-            if field_to_edit == 'excipients':
-                excipients = []
-                count = 1
-                while True:
-                    excipient_name = st.text_input(f"Enter Excipient {count}:", key=f"edit_excipient_name_{count}")
-                    if not excipient_name:
-                        break
-                    excipient_amount = st.number_input(f"Enter Excipient {count} amount (mg/unit):", min_value=0.0, step=0.1, key=f"edit_excipient_amount_{count}")
-                    excipients.append((excipient_name, excipient_amount))
-                    count += 1
-                data['excipients'] = excipients
-            else:
-                new_value = st.text_input(f"Enter new value for {field_to_edit}:")
-                data[field_to_edit] = new_value
-        return data
 
     # Add a title slide layout (usually the first layout in the template)
     slide_layout = presentation.slide_layouts[5]
@@ -118,18 +82,6 @@ def title_slide(presentation, presentation_path, shared_data):
     shared_data['initials'] = initials
     shared_data['eln'] = eln
     shared_data['date'] = current_date
-
-    # Review and edit step
-    shared_data = review_and_edit(shared_data, "Review the entered data:")
-
-    # Update the slide content based on the edited values
-    batch_number = shared_data['batch_number']
-    api_code = shared_data['api_code']
-    api_amount = shared_data['api_amount']
-    excipients = shared_data['excipients']
-    initials = shared_data['initials']
-    eln = shared_data['eln']
-    current_date = shared_data['date']
 
     # Update the batch number textbox
     top = Inches(3)  # Adjusted position to ensure no overlap with title
@@ -207,7 +159,6 @@ def title_slide(presentation, presentation_path, shared_data):
     presentation.save(presentation_path)
     st.success(f"New presentation created and saved as {presentation_path}")
 
-#Cell 2
 #Cell 2
 def hypothesis_rationale_expected_slide(presentation, presentation_path, shared_data):
     from pptx.util import Pt, Inches
@@ -462,40 +413,6 @@ def processing_slide(presentation, presentation_path, shared_data):
     st.success(f"New slide added and saved in the presentation as {presentation_path}.")
 
 #Cell 4
-def review_and_edit(data, prompt):
-    while True:
-        st.write(f"\n{prompt}")
-        numbered_fields = list(data.items())
-        for idx, (key, value) in enumerate(numbered_fields, start=1):
-            if key == 'excipients':
-                st.write(f"{idx}. {key}:")
-                for excipient_name, excipient_amount in value:
-                    st.write(f"   - {excipient_name}: {excipient_amount} mg/unit")
-            else:
-                st.write(f"{idx}. {key}: {value}")
-
-        edit_choice = st.radio("Would you like to edit any field?", ("No", "Yes"))
-        if edit_choice == 'Yes':
-            field_number = st.number_input("Enter the number corresponding to the field you want to edit:", min_value=1, max_value=len(numbered_fields), step=1)
-            field_to_edit = numbered_fields[field_number - 1][0]
-            if field_to_edit == 'excipients':
-                excipients = []
-                count = 1
-                while True:
-                    excipient_name = st.text_input(f"Enter Excipient {count}:", key=f"edit_excipient_name_{count}")
-                    if not excipient_name:
-                        break
-                    excipient_amount = st.number_input(f"Enter Excipient {count} amount (mg/unit):", min_value=0.0, step=0.1, key=f"edit_excipient_amount_{count}")
-                    excipients.append((excipient_name, excipient_amount))
-                    count += 1
-                data['excipients'] = excipients
-            else:
-                new_value = st.text_input(f"Enter new value for {field_to_edit}:")
-                data[field_to_edit] = new_value
-        else:
-            break
-    return data
-
 def compression_conditions_slide(presentation, presentation_path, shared_data):
     from pptx.util import Pt, Inches
     from pptx.dml.color import RGBColor
@@ -587,20 +504,6 @@ def compression_conditions_slide(presentation, presentation_path, shared_data):
     shared_data['tablet_height'] = tablet_height
     shared_data['tablet_weight'] = tablet_weight
     shared_data['solid_fraction'] = solid_fraction
-
-    # Review and edit step
-    shared_data = review_and_edit(shared_data, "Review the entered data:")
-
-    # Update the slide content based on the edited values
-    eln_number = shared_data['eln_number']
-    punch_width = shared_data['punch_width']
-    punch_length = shared_data['punch_length']
-    punch_number = shared_data['punch_number']
-    cycles_used = shared_data['cycles_used']
-    compression_force = shared_data['compression_force']
-    tablet_height = shared_data['tablet_height']
-    tablet_weight = shared_data['tablet_weight']
-    solid_fraction = shared_data['solid_fraction']
 
     # Define the table position and size
     left = Inches(0.2)  # Align to the left side
@@ -698,15 +601,15 @@ def compression_conditions_slide(presentation, presentation_path, shared_data):
         # Prompt user for "Determined content" and "CV (%)" for API
         determined_content_api = get_numerical_input(f"Enter Determined content (mg/unit) for {api_code} (numerical value):")
         cv_api = get_numerical_input(f"Enter CV (%) for {api_code} (numerical value):")
-        table2.cell(1, 2).text = determined_content_api
-        table2.cell(1, 3).text = cv_api
+        table2.cell(1, 2).text = f'{determined_content_api}'
+        table2.cell(1, 3).text = f'{cv_api}'
 
         # Prompt user for "Determined content" and "CV (%)" for each excipient
         for i, (excipient_name, _) in enumerate(excipients, start=2):
             determined_content_excipient = get_numerical_input(f"Enter Determined content (mg/unit) for {excipient_name} (numerical value):")
             cv_excipient = get_numerical_input(f"Enter CV (%) for {excipient_name} (numerical value):")
-            table2.cell(i, 2).text = determined_content_excipient
-            table2.cell(i, 3).text = cv_excipient
+            table2.cell(i, 2).text = f'{determined_content_excipient}'
+            table2.cell(i, 3).text = f'{cv_excipient}'
 
         # Update shared_data with determined content and CV
         shared_data['determined_content'] = {api_code: determined_content_api}
@@ -739,7 +642,6 @@ def compression_conditions_slide(presentation, presentation_path, shared_data):
     st.success(f"New slide added and saved in the presentation as {presentation_path}.")
 
 #Cell 5
-#Cell 6
 def tablet_disintegration_slide(presentation, presentation_path, shared_data):
     from pptx.util import Pt, Inches
     from pptx.dml.color import RGBColor
