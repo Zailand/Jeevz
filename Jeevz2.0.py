@@ -97,7 +97,10 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
 
 # Function to collect user inputs and store them temporarily for a new project
 def collect_user_inputs_new_project(presentation, presentation_path, shared_data):
-    if st.session_state.get('current_step', 0) == 0:
+    if 'current_step' not in st.session_state:
+        st.session_state['current_step'] = 0
+
+    if st.session_state['current_step'] == 0:
         st.write("Now working on the Title Slide")
         title_slide(presentation, presentation_path, shared_data)
         continue_clicked, stop_clicked = continue_prompt(key="title")
@@ -107,7 +110,7 @@ def collect_user_inputs_new_project(presentation, presentation_path, shared_data
         if continue_clicked:
             st.session_state['current_step'] = 1
 
-    if st.session_state.get('current_step', 1) == 1:
+    if st.session_state['current_step'] == 1:
         st.write("Now working on the Hypothesis, Rationale & expected results slide")
         hypothesis_rationale_expected_slide(presentation, presentation_path, shared_data)
         continue_clicked, stop_clicked = continue_prompt(key="1")
@@ -117,7 +120,7 @@ def collect_user_inputs_new_project(presentation, presentation_path, shared_data
         if continue_clicked:
             st.session_state['current_step'] = 2
 
-    if st.session_state.get('current_step', 0) == 2:
+    if st.session_state['current_step'] == 2:
         st.write("Now working on the Processing slide")
         processing_slide(presentation, presentation_path, shared_data)
         continue_clicked, stop_clicked = continue_prompt(key="2")
@@ -127,7 +130,7 @@ def collect_user_inputs_new_project(presentation, presentation_path, shared_data
         if continue_clicked:
             st.session_state['current_step'] = 3
 
-    if st.session_state.get('current_step', 0) == 3:
+    if st.session_state['current_step'] == 3:
         st.write("Now working on the Compression conditions slide")
         compression_conditions_slide(presentation, presentation_path, shared_data)
         continue_clicked, stop_clicked = continue_prompt(key="3")
@@ -137,7 +140,7 @@ def collect_user_inputs_new_project(presentation, presentation_path, shared_data
         if continue_clicked:
             st.session_state['current_step'] = 4
 
-    if st.session_state.get('current_step', 0) == 4:
+    if st.session_state['current_step'] == 4:
         st.write("Now working on the Tablet disintegration slide")
         tablet_disintegration_slide(presentation, presentation_path, shared_data)
         continue_clicked, stop_clicked = continue_prompt(key="4")
