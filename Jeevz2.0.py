@@ -47,21 +47,25 @@ def handle_steps(presentation, presentation_path, shared_data):
         title_slide(presentation, presentation_path, shared_data)
         if st.button("Continue to Hypothesis slide"):
             st.session_state['current_step'] = 1
+            st.experimental_rerun()
     elif current_step == 1:
         st.write("Now working on the Hypothesis, Rationale & expected results slide")
         hypothesis_rationale_expected_slide(presentation, presentation_path, shared_data)
         if st.button("Continue to Process slide"):
             st.session_state['current_step'] = 2
+            st.experimental_rerun()
     elif current_step == 2:
         st.write("Now working on the Processing slide")
         processing_slide(presentation, presentation_path, shared_data)
         if st.button("Continue to Compression conditions slide"):
             st.session_state['current_step'] = 3
+            st.experimental_rerun()
     elif current_step == 3:
         st.write("Now working on the Compression conditions slide")
         compression_conditions_slide(presentation, presentation_path, shared_data)
         if st.button("Continue to Disintegration conditions slide"):
             st.session_state['current_step'] = 4
+            st.experimental_rerun()
     elif current_step == 4:
         st.write("Now working on the Tablet disintegration slide")
         tablet_disintegration_slide(presentation, presentation_path, shared_data)
