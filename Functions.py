@@ -644,8 +644,7 @@ def compression_conditions_slide(presentation, presentation_path, shared_data):
 def tablet_disintegration_slide(presentation, presentation_path, shared_data):
     from pptx.util import Pt, Inches
     from pptx.dml.color import RGBColor
-    from pptx.enum.text import PP_ALIGN
-    from pptx.enum.shapes import MSO_ANCHOR
+    from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
     from datetime import datetime
     import json
     import streamlit as st
