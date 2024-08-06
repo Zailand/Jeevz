@@ -4,6 +4,7 @@ import json
 from importnb import Notebook
 from pptx import Presentation
 import pandas as pd
+import base64
 
 # Function to load an existing presentation
 def load_presentation(file):
@@ -115,6 +116,17 @@ def save_presentation(presentation, presentation_path):
         st.error(f"The file '{presentation_path}' cannot be saved. It might be open or you might not have permission.")
         return False
 
+# Function to provide a download link for the presentation
+def provide_download_link(presentation_path):
+    with open(presentation_path, "rb") as file:
+        btn = st.download_button(
+            label="Download Presentation",
+            data=file,
+            file_name=presentation_path,
+            mime="application/vnd.openxmlformats-officedocument.presentationml.presentation"
+        )
+    return btn
+
 # Function to start a new project
 def start_new_project():
     st.write("Starting a new project...")
@@ -123,7 +135,8 @@ def start_new_project():
     shared_data = {}
 
     if collect_user_inputs_new_project(presentation, presentation_path, shared_data):
-        save_presentation(presentation, presentation_path)
+        if save_presentation(presentation, presentation_path):
+            provide_download_link(presentation_path)
 
 # Function to load an existing project
 def load_existing_project():
@@ -135,7 +148,8 @@ def load_existing_project():
         start_from = continue_from()
 
         if collect_user_inputs(presentation, uploaded_file.name, shared_data, start_from):
-            save_presentation(presentation, uploaded_file.name)
+            if save_presentation(presentation, uploaded_file.name):
+                provide_download_link(uploaded_file.name)
 
 # Main function to ask the user if they want to start a new project or load an existing one
 def main():
