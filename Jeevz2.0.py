@@ -48,35 +48,29 @@ with Notebook():
 
 # Function to collect user inputs and store them temporarily for an existing project
 def collect_user_inputs(presentation, presentation_path, shared_data, start_from=1):
-    st.write(f"Current step: {st.session_state.get('current_step', 'title_slide')}")
-    
     if start_from <= 1 and st.session_state.get('current_step', 'title_slide') == 'hypothesis_rationale_expected_slide':
         st.write("Now working on the Hypothesis, Rationale & expected results slide")
         hypothesis_rationale_expected_slide(presentation, presentation_path, shared_data)
         if continue_prompt(key="hypothesis_rationale_expected_slide"):
             st.session_state['current_step'] = 'processing_slide'
-            st.experimental_rerun()
 
     if start_from <= 2 and st.session_state.get('current_step', 'title_slide') == 'processing_slide':
         st.write("Now working on the Processing slide")
         processing_slide(presentation, presentation_path, shared_data)
         if continue_prompt(key="processing_slide"):
             st.session_state['current_step'] = 'compression_conditions_slide'
-            st.experimental_rerun()
 
     if start_from <= 3 and st.session_state.get('current_step', 'title_slide') == 'compression_conditions_slide':
         st.write("Now working on the Compression conditions slide")
         compression_conditions_slide(presentation, presentation_path, shared_data)
         if continue_prompt(key="compression_conditions_slide"):
             st.session_state['current_step'] = 'tablet_disintegration_slide'
-            st.experimental_rerun()
 
     if start_from <= 4 and st.session_state.get('current_step', 'title_slide') == 'tablet_disintegration_slide':
         st.write("Now working on the Tablet disintegration slide")
         tablet_disintegration_slide(presentation, presentation_path, shared_data)
         if continue_prompt(key="tablet_disintegration_slide"):
             st.session_state['current_step'] = 'completed'
-            st.experimental_rerun()
 
     return True
 
@@ -85,42 +79,35 @@ def collect_user_inputs_new_project(presentation, presentation_path, shared_data
     if 'current_step' not in st.session_state:
         st.session_state['current_step'] = 'title_slide'
 
-    st.write(f"Current step: {st.session_state['current_step']}")
-
     if st.session_state['current_step'] == 'title_slide':
         st.write("Now working on the Title Slide")
         title_slide(presentation, presentation_path, shared_data)
         if continue_prompt(key="title_slide"):
             st.session_state['current_step'] = 'hypothesis_rationale_expected_slide'
-            st.experimental_rerun()
 
     if st.session_state['current_step'] == 'hypothesis_rationale_expected_slide':
         st.write("Now working on the Hypothesis, Rationale & expected results slide")
         hypothesis_rationale_expected_slide(presentation, presentation_path, shared_data)
         if continue_prompt(key="hypothesis_rationale_expected_slide"):
             st.session_state['current_step'] = 'processing_slide'
-            st.experimental_rerun()
 
     if st.session_state['current_step'] == 'processing_slide':
         st.write("Now working on the Processing slide")
         processing_slide(presentation, presentation_path, shared_data)
         if continue_prompt(key="processing_slide"):
             st.session_state['current_step'] = 'compression_conditions_slide'
-            st.experimental_rerun()
 
     if st.session_state['current_step'] == 'compression_conditions_slide':
         st.write("Now working on the Compression conditions slide")
         compression_conditions_slide(presentation, presentation_path, shared_data)
         if continue_prompt(key="compression_conditions_slide"):
             st.session_state['current_step'] = 'tablet_disintegration_slide'
-            st.experimental_rerun()
 
     if st.session_state['current_step'] == 'tablet_disintegration_slide':
         st.write("Now working on the Tablet disintegration slide")
         tablet_disintegration_slide(presentation, presentation_path, shared_data)
         if continue_prompt(key="tablet_disintegration_slide"):
             st.session_state['current_step'] = 'completed'
-            st.experimental_rerun()
 
     return True
 
