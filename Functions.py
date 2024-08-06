@@ -645,6 +645,7 @@ def tablet_disintegration_slide(presentation, presentation_path, shared_data):
     from pptx.util import Pt, Inches
     from pptx.dml.color import RGBColor
     from pptx.enum.text import PP_ALIGN
+    from pptx.enum.shapes import MSO_ANCHOR
     from datetime import datetime
     import json
     import streamlit as st
@@ -733,6 +734,14 @@ def tablet_disintegration_slide(presentation, presentation_path, shared_data):
             cell = table.cell(i, 0)
             p = cell.text_frame.add_paragraph()
             p.text = time
+            p.font.name = '
+
+        # Set the Times column without subscript text
+        times = ["T10", "T50", "T90", "T100"]
+        for i, time in enumerate(times, start=1):
+            cell = table.cell(i, 0)
+            p = cell.text_frame.add_paragraph()
+            p.text = time
             p.font.name = 'Verdana'
             p.font.size = Pt(12)
             cell.vertical_anchor = MSO_ANCHOR.TOP  # Set vertical alignment to top
@@ -762,6 +771,7 @@ def tablet_disintegration_slide(presentation, presentation_path, shared_data):
                 cell.text_frame.paragraphs[0].font.name = 'Calibri'
                 cell.text_frame.paragraphs[0].font.size = Pt(12)
                 cell.vertical_anchor = MSO_ANCHOR.TOP  # Set vertical alignment to top
+
         # Add images to the slide with titles
         image_left = Inches(0.5)  # Adjust position as needed
         image_top = Inches(4.5)   # Adjust position as needed
@@ -849,4 +859,4 @@ def tablet_disintegration_slide(presentation, presentation_path, shared_data):
 
     # Save the presentation with the new slides
     presentation.save(presentation_path)
-    print(f"New slides with Tablet disintegration data and images added and saved in the presentation as {presentation_path}.")
+    st.success(f"New slides with Tablet disintegration data and images added and saved in the presentation as {presentation_path}.")
