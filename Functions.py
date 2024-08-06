@@ -809,54 +809,54 @@ def tablet_disintegration_slide(presentation, presentation_path, shared_data):
         notes_text_frame.clear()
         notes_text_frame.text = json.dumps(shared_data, indent=2)
 
-    # Main loop to add multiple disintegration slides
-    while True:
-        # Prompt user for media and volume
-        media = st.text_input("Enter media (or press Enter to finish):")
-        if not media:
-            break
-        volume = st.number_input("Enter volume (mL):")
-        eln_number = st.text_input("Please enter the SVD ELN number (format xxxxx-xxx, or press Enter to skip):")
-
-        # Validate the ELN number format
-        while eln_number and not re.match(r'^\d{5}-\d{3}$', eln_number):
-            st.error("Invalid ELN number format. Please enter in the format xxxxx-xxx.")
-            eln_number = st.text_input("Please enter the SVD ELN number (format xxxxx-xxx, or press Enter to skip):")
-
-        # Initialize SVD data collection
-        svd_data = []
-        svd_count = 1
-
+        # Main loop to add multiple disintegration slides
         while True:
-            t10 = st.text_input(f"Enter T10 for SVD {svd_count} (or press Enter to finish):")
-            if not t10:
+            # Prompt user for media and volume
+            media = st.text_input("Enter media (or press Enter to finish):")
+            if not media:
                 break
-            t50 = st.text_input(f"Enter T50 for SVD {svd_count}:")
-            t90 = st.text_input(f"Enter T90 for SVD {svd_count}:")
-            t100 = st.text_input(f"Enter T100 for SVD {svd_count}:")
-            svd_data.append((t10, t50, t90, t100))
-            svd_count += 1
-
-        # Check if the user wants to add a disintegration curve
-        image_paths = []
-        add_curve = st.radio("Would you like to add a Disintegration curve?", ("No", "Yes"))
-        if add_curve == 'Yes':
-            # Prompt user for image paths using a file uploader
-            for idx in range(1, svd_count):
-                image_path = st.file_uploader(f"Select image for SVD {idx}", type=["png", "jpg", "jpeg"], key=f"image_{idx}")
-                if not image_path:
+            volume = st.number_input("Enter volume (mL):")
+            eln_number = st.text_input("Please enter the SVD ELN number (format xxxxx-xxx, or press Enter to skip):")
+    
+            # Validate the ELN number format
+            while eln_number and not re.match(r'^\d{5}-\d{3}$', eln_number):
+                st.error("Invalid ELN number format. Please enter in the format xxxxx-xxx.")
+                eln_number = st.text_input("Please enter the SVD ELN number (format xxxxx-xxx, or press Enter to skip):")
+    
+            # Initialize SVD data collection
+            svd_data = []
+            svd_count = 1
+    
+            while True:
+                t10 = st.text_input(f"Enter T10 for SVD {svd_count} (or press Enter to finish):")
+                if not t10:
                     break
-                image_paths.append(image_path)
-
-        # Store the user inputs in shared_data
-        shared_data['media'] = media
-        shared_data['volume'] = volume
-        shared_data['svd_data'] = [{'t10': t10, 't50': t50, 't90': t90, 't100': t100} for t10, t50, t90, t100 in svd_data]
-        shared_data['image_paths'] = image_paths
-
-        # Add a new disintegration slide for the current media
-        add_disintegration_slide(presentation, media, volume, svd_data, image_paths, shared_data)
-
-    # Save the presentation with the new slides
-    presentation.save(presentation_path)
-    st.success(f"New slides with Tablet disintegration data and images added and saved in the presentation as {presentation_path}.")
+                t50 = st.text_input(f"Enter T50 for SVD {svd_count}:")
+                t90 = st.text_input(f"Enter T90 for SVD {svd_count}:")
+                t100 = st.text_input(f"Enter T100 for SVD {svd_count}:")
+                svd_data.append((t10, t50, t90, t100))
+                svd_count += 1
+    
+            # Check if the user wants to add a disintegration curve
+            image_paths = []
+            add_curve = st.radio("Would you like to add a Disintegration curve?", ("No", "Yes"))
+            if add_curve == 'Yes':
+                # Prompt user for image paths using a file uploader
+                for idx in range(1, svd_count):
+                    image_path = st.file_uploader(f"Select image for SVD {idx}", type=["png", "jpg", "jpeg"], key=f"image_{idx}")
+                    if not image_path:
+                        break
+                    image_paths.append(image_path)
+    
+            # Store the user inputs in shared_data
+            shared_data['media'] = media
+            shared_data['volume'] = volume
+            shared_data['svd_data'] = [{'t10': t10, 't50': t50, 't90': t90, 't100': t100} for t10, t50, t90, t100 in svd_data]
+            shared_data['image_paths'] = image_paths
+    
+            # Add a new disintegration slide for the current media
+            add_disintegration_slide(presentation, media, volume, svd_data, image_paths, shared_data)
+    
+        # Save the presentation with the new slides
+        presentation.save(presentation_path)
+        st.success(f"New slides with Tablet disintegration data and images added and saved in the presentation as {presentation_path}.")
