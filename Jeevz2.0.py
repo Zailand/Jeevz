@@ -96,10 +96,10 @@ def provide_download_link(presentation_path):
 def start_new_project():
     st.write("Starting a new project...")
     presentation_path = st.text_input("Enter the path to save the new presentation:", "new_presentation.pptx")
-    presentation = Presentation()
-    shared_data = {}
-
-    handle_steps(presentation, presentation_path, shared_data)
+    if presentation_path:
+        presentation = Presentation()
+        shared_data = {}
+        handle_steps(presentation, presentation_path, shared_data)
 
 # Function to load an existing project
 def load_existing_project():
