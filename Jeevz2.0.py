@@ -48,66 +48,66 @@ with Notebook():
 
 # Function to collect user inputs and store them temporarily for an existing project
 def collect_user_inputs(presentation, presentation_path, shared_data, start_from=1):
-    if start_from <= 1 and st.session_state.get('current_step', 1) == 1:
+    if start_from <= 1 and st.session_state.get('current_step', 'title_slide') == 'title_slide':
         st.write("Now working on the Hypothesis, Rationale & expected results slide")
         hypothesis_rationale_expected_slide(presentation, presentation_path, shared_data)
-        if continue_prompt(key="1"):
-            st.session_state['current_step'] = 2
+        if continue_prompt(key="hypothesis_rationale_expected_slide"):
+            st.session_state['current_step'] = 'processing_slide'
 
-    if start_from <= 2 and st.session_state.get('current_step', 1) == 2:
+    if start_from <= 2 and st.session_state.get('current_step', 'title_slide') == 'processing_slide':
         st.write("Now working on the Processing slide")
         processing_slide(presentation, presentation_path, shared_data)
-        if continue_prompt(key="2"):
-            st.session_state['current_step'] = 3
+        if continue_prompt(key="processing_slide"):
+            st.session_state['current_step'] = 'compression_conditions_slide'
 
-    if start_from <= 3 and st.session_state.get('current_step', 1) == 3:
+    if start_from <= 3 and st.session_state.get('current_step', 'title_slide') == 'compression_conditions_slide':
         st.write("Now working on the Compression conditions slide")
         compression_conditions_slide(presentation, presentation_path, shared_data)
-        if continue_prompt(key="3"):
-            st.session_state['current_step'] = 4
+        if continue_prompt(key="compression_conditions_slide"):
+            st.session_state['current_step'] = 'tablet_disintegration_slide'
 
-    if start_from <= 4 and st.session_state.get('current_step', 1) == 4:
+    if start_from <= 4 and st.session_state.get('current_step', 'title_slide') == 'tablet_disintegration_slide':
         st.write("Now working on the Tablet disintegration slide")
         tablet_disintegration_slide(presentation, presentation_path, shared_data)
-        if continue_prompt(key="4"):
-            st.session_state['current_step'] = 5
+        if continue_prompt(key="tablet_disintegration_slide"):
+            st.session_state['current_step'] = 'completed'
 
     return True
 
 # Function to collect user inputs and store them temporarily for a new project
 def collect_user_inputs_new_project(presentation, presentation_path, shared_data):
     if 'current_step' not in st.session_state:
-        st.session_state['current_step'] = 0
+        st.session_state['current_step'] = 'title_slide'
 
-    if st.session_state['current_step'] == 0:
+    if st.session_state['current_step'] == 'title_slide':
         st.write("Now working on the Title Slide")
         title_slide(presentation, presentation_path, shared_data)
-        if continue_prompt(key="title"):
-            st.session_state['current_step'] = 1
+        if continue_prompt(key="title_slide"):
+            st.session_state['current_step'] = 'hypothesis_rationale_expected_slide'
 
-    if st.session_state['current_step'] == 1:
+    if st.session_state['current_step'] == 'hypothesis_rationale_expected_slide':
         st.write("Now working on the Hypothesis, Rationale & expected results slide")
         hypothesis_rationale_expected_slide(presentation, presentation_path, shared_data)
-        if continue_prompt(key="1"):
-            st.session_state['current_step'] = 2
+        if continue_prompt(key="hypothesis_rationale_expected_slide"):
+            st.session_state['current_step'] = 'processing_slide'
 
-    if st.session_state['current_step'] == 2:
+    if st.session_state['current_step'] == 'processing_slide':
         st.write("Now working on the Processing slide")
         processing_slide(presentation, presentation_path, shared_data)
-        if continue_prompt(key="2"):
-            st.session_state['current_step'] = 3
+        if continue_prompt(key="processing_slide"):
+            st.session_state['current_step'] = 'compression_conditions_slide'
 
-    if st.session_state['current_step'] == 3:
+    if st.session_state['current_step'] == 'compression_conditions_slide':
         st.write("Now working on the Compression conditions slide")
         compression_conditions_slide(presentation, presentation_path, shared_data)
-        if continue_prompt(key="3"):
-            st.session_state['current_step'] = 4
+        if continue_prompt(key="compression_conditions_slide"):
+            st.session_state['current_step'] = 'tablet_disintegration_slide'
 
-    if st.session_state['current_step'] == 4:
+    if st.session_state['current_step'] == 'tablet_disintegration_slide':
         st.write("Now working on the Tablet disintegration slide")
         tablet_disintegration_slide(presentation, presentation_path, shared_data)
-        if continue_prompt(key="4"):
-            st.session_state['current_step'] = 5
+        if continue_prompt(key="tablet_disintegration_slide"):
+            st.session_state['current_step'] = 'completed'
 
     return True
 
@@ -165,10 +165,10 @@ def main():
     )
 
     if choice == "Start a new project":
-        st.session_state['current_step'] = 0
+        st.session_state['current_step'] = 'title_slide'
         start_new_project()
     elif choice == "Load an existing project":
-        st.session_state['current_step'] = 0
+        st.session_state['current_step'] = 'title_slide'
         load_existing_project()
 
 # Run the main function
