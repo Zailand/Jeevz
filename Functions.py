@@ -533,17 +533,17 @@ def compression_conditions_slide(presentation, presentation_path, shared_data):
     table.cell(1, 0).text = "Punch dimensions (WxL in mm):"
     table.cell(1, 1).text = f"{punch_width} x {punch_length}"
     table.cell(2, 0).text = "Punch number:"
-    table.cell(2, 1).text = punch_number
+    table.cell(2, 1).text = str(punch_number)
     table.cell(3, 0).text = "Cycles used:"
-    table.cell(3, 1).text = cycles_used
+    table.cell(3, 1).text = str(cycles_used)
     table.cell(4, 0).text = "Compression force (kN):"
-    table.cell(4, 1).text = compression_force
+    table.cell(4, 1).text = str(compression_force)
     table.cell(5, 0).text = "Tablet average height (mm):"
-    table.cell(5, 1).text = tablet_height
+    table.cell(5, 1).text = str(tablet_height)
     table.cell(6, 0).text = "Tablet average weight (mg):"
-    table.cell(6, 1).text = tablet_weight
+    table.cell(6, 1).text = str(tablet_weight)
     table.cell(7, 0).text = "Solid fraction:"
-    table.cell(7, 1).text = solid_fraction
+    table.cell(7, 1).text = str(solid_fraction)
 
     # Format the table text
     for row in table.rows:
@@ -600,15 +600,15 @@ def compression_conditions_slide(presentation, presentation_path, shared_data):
         # Prompt user for "Determined content" and "CV (%)" for API
         determined_content_api = get_numerical_input(f"Enter Determined content (mg/unit) for {api_code} (numerical value):")
         cv_api = get_numerical_input(f"Enter CV (%) for {api_code} (numerical value):")
-        table2.cell(1, 2).text = f'{determined_content_api}'
-        table2.cell(1, 3).text = f'{cv_api}'
+        table2.cell(1, 2).text = str(determined_content_api)
+        table2.cell(1, 3).text = str(cv_api)
 
         # Prompt user for "Determined content" and "CV (%)" for each excipient
         for i, (excipient_name, _) in enumerate(excipients, start=2):
             determined_content_excipient = get_numerical_input(f"Enter Determined content (mg/unit) for {excipient_name} (numerical value):")
             cv_excipient = get_numerical_input(f"Enter CV (%) for {excipient_name} (numerical value):")
-            table2.cell(i, 2).text = f'{determined_content_excipient}'
-            table2.cell(i, 3).text = f'{cv_excipient}'
+            table2.cell(i, 2).text = str(determined_content_excipient)
+            table2.cell(i, 3).text = str(cv_excipient)
 
         # Update shared_data with determined content and CV
         shared_data['determined_content'] = {api_code: determined_content_api}
