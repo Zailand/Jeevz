@@ -1,14 +1,4 @@
 #Cell 1
-    from pptx.util import Pt, Inches
-    from pptx.dml.color import RGBColor
-    from pptx.enum.text import PP_ALIGN
-    from datetime import datetime
-    import json
-    import streamlit as st
-    import os
-    from PIL import Image
-    import re
-
 def title_slide(presentation, presentation_path, shared_data):
     from pptx.util import Pt, Inches
     from pptx.dml.color import RGBColor
