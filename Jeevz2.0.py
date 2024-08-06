@@ -42,7 +42,6 @@ with Notebook():
     )
 
 # Function to handle the progression through the steps
-# Function to handle the progression through the steps
 def handle_steps(presentation, presentation_path, shared_data):
     if 'current_step' not in st.session_state:
         st.session_state['current_step'] = 0
@@ -73,16 +72,6 @@ def handle_steps(presentation, presentation_path, shared_data):
     else:
         if save_presentation(presentation, presentation_path):
             provide_download_link(presentation_path)
-
-# Function to save the presentation with error handling
-def save_presentation(presentation, presentation_path):
-    try:
-        presentation.save(presentation_path)
-        st.success(f"Presentation saved as {presentation_path}")
-        return True
-    except IOError:
-        st.error(f"The file '{presentation_path}' cannot be saved. It might be open or you might not have permission.")
-        return False
 
 # Function to save the presentation with error handling
 def save_presentation(presentation, presentation_path):
