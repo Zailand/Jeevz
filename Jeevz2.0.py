@@ -107,7 +107,7 @@ def collect_user_inputs_new_project(presentation, presentation_path, shared_data
         if continue_clicked:
             st.session_state['current_step'] = 1
 
-    if st.session_state.get('current_step', 0) == 1:
+    if st.session_state.get('current_step', 1) == 1:
         st.write("Now working on the Hypothesis, Rationale & expected results slide")
         hypothesis_rationale_expected_slide(presentation, presentation_path, shared_data)
         continue_clicked, stop_clicked = continue_prompt(key="1")
