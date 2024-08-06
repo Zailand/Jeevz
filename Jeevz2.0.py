@@ -36,6 +36,10 @@ with Notebook():
         tablet_disintegration_slide,
     )
 
+# Function to prompt for continuation
+def continue_prompt():
+    return st.button("Continue")
+
 # Function to handle the progression through the steps
 def handle_steps():
     if 'current_step' not in st.session_state:
@@ -51,31 +55,27 @@ def handle_steps():
     if current_step == 0:
         st.write("Now working on the Title Slide")
         title_slide(presentation, presentation_path, shared_data)
-        if st.button("Continue to Hypothesis slide"):
+        if continue_prompt():
             save_presentation(presentation, presentation_path)
             st.session_state['current_step'] = 1
-            st.experimental_rerun()
     elif current_step == 1:
         st.write("Now working on the Hypothesis, Rationale & expected results slide")
         hypothesis_rationale_expected_slide(presentation, presentation_path, shared_data)
-        if st.button("Continue to Process slide"):
+        if continue_prompt():
             save_presentation(presentation, presentation_path)
             st.session_state['current_step'] = 2
-            st.experimental_rerun()
     elif current_step == 2:
         st.write("Now working on the Processing slide")
         processing_slide(presentation, presentation_path, shared_data)
-        if st.button("Continue to Compression conditions slide"):
+        if continue_prompt():
             save_presentation(presentation, presentation_path)
             st.session_state['current_step'] = 3
-            st.experimental_rerun()
     elif current_step == 3:
         st.write("Now working on the Compression conditions slide")
         compression_conditions_slide(presentation, presentation_path, shared_data)
-        if st.button("Continue to Disintegration conditions slide"):
+        if continue_prompt():
             save_presentation(presentation, presentation_path)
             st.session_state['current_step'] = 4
-            st.experimental_rerun()
     elif current_step == 4:
         st.write("Now working on the Tablet disintegration slide")
         tablet_disintegration_slide(presentation, presentation_path, shared_data)
