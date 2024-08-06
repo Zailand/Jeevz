@@ -68,7 +68,7 @@ def handle_steps(presentation, presentation_path, shared_data):
 
         if next_step is not None:
             st.session_state['current_step'] = int(next_step.split(".")[0])
-            # Instead of rerunning, we just update the state and let Streamlit handle the UI update
+            st.experimental_rerun()  # Ensure the UI updates
     else:
         if save_presentation(presentation, presentation_path):
             provide_download_link(presentation_path)
