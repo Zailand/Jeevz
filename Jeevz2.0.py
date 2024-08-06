@@ -32,14 +32,9 @@ def continue_from():
     )
     return ["Hypothesis, Rationale & expected results", "Processing", "Compression conditions", "Tablet disintegration"].index(choice) + 1
 
-# Function to prompt for continuation or stopping
+# Function to prompt for continuation
 def continue_prompt(key):
-    col1, col2 = st.columns(2)
-    with col1:
-        continue_clicked = st.button("Continue", key=f"continue_{key}")
-    with col2:
-        stop_clicked = st.button("Stop", key=f"stop_{key}")
-    return continue_clicked, stop_clicked
+    return st.button("Continue", key=f"continue_{key}")
 
 # Import functions from Functions.ipynb
 with Notebook():
@@ -56,41 +51,25 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
     if start_from <= 1 and st.session_state.get('current_step', 1) == 1:
         st.write("Now working on the Hypothesis, Rationale & expected results slide")
         hypothesis_rationale_expected_slide(presentation, presentation_path, shared_data)
-        continue_clicked, stop_clicked = continue_prompt(key="1")
-        if stop_clicked:
-            st.session_state['current_step'] = 0
-            return False
-        if continue_clicked:
+        if continue_prompt(key="1"):
             st.session_state['current_step'] = 2
 
     if start_from <= 2 and st.session_state.get('current_step', 1) == 2:
         st.write("Now working on the Processing slide")
         processing_slide(presentation, presentation_path, shared_data)
-        continue_clicked, stop_clicked = continue_prompt(key="2")
-        if stop_clicked:
-            st.session_state['current_step'] = 0
-            return False
-        if continue_clicked:
+        if continue_prompt(key="2"):
             st.session_state['current_step'] = 3
 
     if start_from <= 3 and st.session_state.get('current_step', 1) == 3:
         st.write("Now working on the Compression conditions slide")
         compression_conditions_slide(presentation, presentation_path, shared_data)
-        continue_clicked, stop_clicked = continue_prompt(key="3")
-        if stop_clicked:
-            st.session_state['current_step'] = 0
-            return False
-        if continue_clicked:
+        if continue_prompt(key="3"):
             st.session_state['current_step'] = 4
 
     if start_from <= 4 and st.session_state.get('current_step', 1) == 4:
         st.write("Now working on the Tablet disintegration slide")
         tablet_disintegration_slide(presentation, presentation_path, shared_data)
-        continue_clicked, stop_clicked = continue_prompt(key="4")
-        if stop_clicked:
-            st.session_state['current_step'] = 0
-            return False
-        if continue_clicked:
+        if continue_prompt(key="4"):
             st.session_state['current_step'] = 5
 
     return True
@@ -103,51 +82,31 @@ def collect_user_inputs_new_project(presentation, presentation_path, shared_data
     if st.session_state['current_step'] == 0:
         st.write("Now working on the Title Slide")
         title_slide(presentation, presentation_path, shared_data)
-        continue_clicked, stop_clicked = continue_prompt(key="title")
-        if stop_clicked:
-            st.session_state['current_step'] = 0
-            return False
-        if continue_clicked:
+        if continue_prompt(key="title"):
             st.session_state['current_step'] = 1
 
     if st.session_state['current_step'] == 1:
         st.write("Now working on the Hypothesis, Rationale & expected results slide")
         hypothesis_rationale_expected_slide(presentation, presentation_path, shared_data)
-        continue_clicked, stop_clicked = continue_prompt(key="1")
-        if stop_clicked:
-            st.session_state['current_step'] = 0
-            return False
-        if continue_clicked:
+        if continue_prompt(key="1"):
             st.session_state['current_step'] = 2
 
     if st.session_state['current_step'] == 2:
         st.write("Now working on the Processing slide")
         processing_slide(presentation, presentation_path, shared_data)
-        continue_clicked, stop_clicked = continue_prompt(key="2")
-        if stop_clicked:
-            st.session_state['current_step'] = 0
-            return False
-        if continue_clicked:
+        if continue_prompt(key="2"):
             st.session_state['current_step'] = 3
 
     if st.session_state['current_step'] == 3:
         st.write("Now working on the Compression conditions slide")
         compression_conditions_slide(presentation, presentation_path, shared_data)
-        continue_clicked, stop_clicked = continue_prompt(key="3")
-        if stop_clicked:
-            st.session_state['current_step'] = 0
-            return False
-        if continue_clicked:
+        if continue_prompt(key="3"):
             st.session_state['current_step'] = 4
 
     if st.session_state['current_step'] == 4:
         st.write("Now working on the Tablet disintegration slide")
         tablet_disintegration_slide(presentation, presentation_path, shared_data)
-        continue_clicked, stop_clicked = continue_prompt(key="4")
-        if stop_clicked:
-            st.session_state['current_step'] = 0
-            return False
-        if continue_clicked:
+        if continue_prompt(key="4"):
             st.session_state['current_step'] = 5
 
     return True
@@ -183,9 +142,6 @@ def start_new_project():
     if collect_user_inputs_new_project(presentation, presentation_path, shared_data):
         if save_presentation(presentation, presentation_path):
             provide_download_link(presentation_path)
-    else:
-        if save_presentation(presentation, presentation_path):
-            provide_download_link(presentation_path)
 
 # Function to load an existing project
 def load_existing_project():
@@ -197,9 +153,6 @@ def load_existing_project():
         start_from = continue_from()
 
         if collect_user_inputs(presentation, uploaded_file.name, shared_data, start_from):
-            if save_presentation(presentation, uploaded_file.name):
-                provide_download_link(uploaded_file.name)
-        else:
             if save_presentation(presentation, uploaded_file.name):
                 provide_download_link(uploaded_file.name)
 
