@@ -53,7 +53,7 @@ with Notebook():
 
 # Function to collect user inputs and store them temporarily for an existing project
 def collect_user_inputs(presentation, presentation_path, shared_data, start_from=1):
-    if start_from <= 1 and st.session_state.get('current_step', 1) == 1:
+    if start_from <= 1:
         st.write("Now working on the Hypothesis, Rationale & expected results slide")
         hypothesis_rationale_expected_slide(presentation, presentation_path, shared_data)
         continue_clicked, stop_clicked = continue_prompt(key="1")
