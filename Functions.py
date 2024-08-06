@@ -7,6 +7,16 @@ import json
 import streamlit as st
 
 def title_slide(presentation, presentation_path, shared_data):
+    from pptx.util import Pt, Inches
+    from pptx.dml.color import RGBColor
+    from pptx.enum.text import PP_ALIGN
+    from datetime import datetime
+    import json
+    import streamlit as st
+    import os
+    from PIL import Image
+    import re
+    
     # Function to get batch number from user
     def get_batch_number():
         batch_number = st.text_input("Enter the batch number (format XXXX-XXXX-XXXX-XX):")
@@ -203,6 +213,12 @@ def hypothesis_rationale_expected_slide(presentation, presentation_path, shared_
     from pptx.util import Pt, Inches
     from pptx.dml.color import RGBColor
     from pptx.enum.text import PP_ALIGN
+    from datetime import datetime
+    import json
+    import streamlit as st
+    import os
+    from PIL import Image
+    import re
 
     # Add a new slide with a blank layout
     slide_layout = presentation.slide_layouts[5]  # Using the blank layout
@@ -272,8 +288,12 @@ def processing_slide(presentation, presentation_path, shared_data):
     from pptx.util import Pt, Inches
     from pptx.dml.color import RGBColor
     from pptx.enum.text import PP_ALIGN
+    from datetime import datetime
+    import json
+    import streamlit as st
     import os
     from PIL import Image
+    import re
 
     # Retrieve shared variables from shared_data
     api_code = shared_data.get('api_code', '')
@@ -480,8 +500,12 @@ def compression_conditions_slide(presentation, presentation_path, shared_data):
     from pptx.util import Pt, Inches
     from pptx.dml.color import RGBColor
     from pptx.enum.text import PP_ALIGN
-    import re
+    from datetime import datetime
     import json
+    import streamlit as st
+    import os
+    from PIL import Image
+    import re
 
     # Retrieve shared variables from shared_data
     api_code = shared_data.get('api_code', '')
@@ -720,8 +744,11 @@ def tablet_disintegration_slide(presentation, presentation_path, shared_data):
     from pptx.util import Pt, Inches
     from pptx.dml.color import RGBColor
     from pptx.enum.text import PP_ALIGN
-    from pptx.enum.text import MSO_ANCHOR
+    from datetime import datetime
     import json
+    import streamlit as st
+    import os
+    from PIL import Image
     import re
 
     # Function to add a disintegration slide
