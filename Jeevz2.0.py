@@ -9,6 +9,8 @@ import base64
 # Function to load an existing presentation
 def load_presentation(file):
     presentation = Presentation(file)
+    st.session_state['presentation'] = presentation
+    st.session_state['presentation_path'] = file.name
     st.success(f"Presentation '{file.name}' has been successfully loaded.")
     return presentation
 
@@ -35,12 +37,16 @@ with Notebook():
     )
 
 # Function to handle the progression through the steps
-def handle_steps(presentation, presentation_path, shared_data):
+def handle_steps():
     if 'current_step' not in st.session_state:
         st.session_state['current_step'] = 0
 
     current_step = st.session_state['current_step']
     st.write(f"Current step: {current_step}")
+
+    presentation = st.session_state.get('presentation')
+    presentation_path = st.session_state.get('presentation_path')
+    shared_data = st.session_state.get('shared_data', {})
 
     if current_step == 0:
         st.write("Now working on the Title Slide")
@@ -102,8 +108,10 @@ def start_new_project():
     presentation_path = st.text_input("Enter the path to save the new presentation:", "new_presentation.pptx")
     if presentation_path:
         presentation = Presentation()
-        shared_data = {}
-        handle_steps(presentation, presentation_path, shared_data)
+        st.session_state['presentation'] = presentation
+        st.session_state['presentation_path'] = presentation_path
+        st.session_state['shared_data'] = {}
+        handle_steps()
 
 # Function to load an existing project
 def load_existing_project():
@@ -112,7 +120,8 @@ def load_existing_project():
     if uploaded_file is not None:
         presentation = load_presentation(uploaded_file)
         shared_data = load_shared_data(presentation)
-        handle_steps(presentation, uploaded_file.name, shared_data)
+        st.session_state['shared_data'] = shared_data
+        handle_steps()
 
 # Main function to ask the user if they want to start a new project or load an existing one
 def main():
