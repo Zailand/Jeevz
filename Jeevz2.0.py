@@ -24,13 +24,6 @@ def load_shared_data(presentation):
     else:
         return {}
 
-# Function to prompt for continuation with a dropdown menu
-def continue_prompt_with_choice(current_step, choices):
-    next_step = st.selectbox("Continue to", choices, index=0)
-    if st.button("Continue"):
-        return next_step
-    return None
-
 # Import functions from Functions.ipynb
 with Notebook():
     from Functions import (
@@ -49,29 +42,52 @@ def handle_steps(presentation, presentation_path, shared_data):
     current_step = st.session_state['current_step']
     st.write(f"Current step: {current_step}")
 
-    steps = [
-        ("Title Slide", title_slide),
-        ("Hypothesis, Rationale & Expected Results Slide", hypothesis_rationale_expected_slide),
-        ("Processing Slide", processing_slide),
-        ("Compression Conditions Slide", compression_conditions_slide),
-        ("Tablet Disintegration Slide", tablet_disintegration_slide)
-    ]
+    if current_step == 0:
+        st.write("Now working on the Title Slide")
+        title_slide(presentation, presentation_path, shared_data)
+        if st.button("Continue to Hypothesis slide"):
+            st.session_state['current_step'] = 1
+        st.write("or")
+        if st.button("Download presentation"):
+            if save_presentation(presentation, presentation_path):
+                provide_download_link(presentation_path)
 
-    if current_step < len(steps):
-        step_name, step_function = steps[current_step]
-        st.write(f"Now working on the {step_name}")
-        step_function(presentation, presentation_path, shared_data)
+    elif current_step == 1:
+        st.write("Now working on the Hypothesis, Rationale & expected results slide")
+        hypothesis_rationale_expected_slide(presentation, presentation_path, shared_data)
+        if st.button("Continue to Process slide"):
+            st.session_state['current_step'] = 2
+        st.write("or")
+        if st.button("Download presentation"):
+            if save_presentation(presentation, presentation_path):
+                provide_download_link(presentation_path)
 
-        # Determine the available choices for the next step
-        choices = [f"{i}. {steps[i][0]}" for i in range(current_step + 1, len(steps))]
-        next_step = continue_prompt_with_choice(current_step, choices)
+    elif current_step == 2:
+        st.write("Now working on the Processing slide")
+        processing_slide(presentation, presentation_path, shared_data)
+        if st.button("Continue to Compression conditions slide"):
+            st.session_state['current_step'] = 3
+        st.write("or")
+        if st.button("Download presentation"):
+            if save_presentation(presentation, presentation_path):
+                provide_download_link(presentation_path)
 
-        if next_step is not None:
-            st.session_state['current_step'] = int(next_step.split(".")[0])
-            st.experimental_rerun()  # Ensure the UI updates
-    else:
-        if save_presentation(presentation, presentation_path):
-            provide_download_link(presentation_path)
+    elif current_step == 3:
+        st.write("Now working on the Compression conditions slide")
+        compression_conditions_slide(presentation, presentation_path, shared_data)
+        if st.button("Continue to Disintegration conditions slide"):
+            st.session_state['current_step'] = 4
+        st.write("or")
+        if st.button("Download presentation"):
+            if save_presentation(presentation, presentation_path):
+                provide_download_link(presentation_path)
+
+    elif current_step == 4:
+        st.write("Now working on the Tablet disintegration slide")
+        tablet_disintegration_slide(presentation, presentation_path, shared_data)
+        if st.button("Download presentation"):
+            if save_presentation(presentation, presentation_path):
+                provide_download_link(presentation_path)
 
 # Function to save the presentation with error handling
 def save_presentation(presentation, presentation_path):
