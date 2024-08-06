@@ -801,40 +801,41 @@ def tablet_disintegration_slide(presentation, presentation_path, shared_data):
         notes_text_frame.text = json.dumps(shared_data, indent=2)
 
     # Main loop to add multiple disintegration slides
+    svd_counter = 0  # Counter to ensure unique keys for widgets
     while True:
         # Prompt user for media and volume
-        media = st.text_input("Enter media (or press Enter to finish):")
+        media = st.text_input(f"Enter media (or press Enter to finish):", key=f"media_{svd_counter}")
         if not media:
             break
-        volume = st.number_input("Enter volume (mL):")
-        eln_number = st.text_input("Please enter the SVD ELN number (format xxxxx-xxx, or press Enter to skip):")
+        volume = st.number_input(f"Enter volume (mL):", key=f"volume_{svd_counter}")
+        eln_number = st.text_input(f"Please enter the SVD ELN number (format xxxxx-xxx, or press Enter to skip):", key=f"eln_number_{svd_counter}")
 
         # Validate the ELN number format
         while eln_number and not re.match(r'^\d{5}-\d{3}$', eln_number):
             st.error("Invalid ELN number format. Please enter in the format xxxxx-xxx.")
-            eln_number = st.text_input("Please enter the SVD ELN number (format xxxxx-xxx, or press Enter to skip):")
+            eln_number = st.text_input(f"Please enter the SVD ELN number (format xxxxx-xxx, or press Enter to skip):", key=f"eln_number_{svd_counter}")
 
         # Initialize SVD data collection
         svd_data = []
         svd_count = 1
 
         while True:
-            t10 = st.text_input(f"Enter T10 for SVD {svd_count} (or press Enter to finish):")
+            t10 = st.text_input(f"Enter T10 for SVD {svd_count} (or press Enter to finish):", key=f"t10_{svd_counter}_{svd_count}")
             if not t10:
                 break
-            t50 = st.text_input(f"Enter T50 for SVD {svd_count}:")
-            t90 = st.text_input(f"Enter T90 for SVD {svd_count}:")
-            t100 = st.text_input(f"Enter T100 for SVD {svd_count}:")
+            t50 = st.text_input(f"Enter T50 for SVD {svd_count}:", key=f"t50_{svd_counter}_{svd_count}")
+            t90 = st.text_input(f"Enter T90 for SVD {svd_count}:", key=f"t90_{svd_counter}_{svd_count}")
+            t100 = st.text_input(f"Enter T100 for SVD {svd_count}:", key=f"t100_{svd_counter}_{svd_count}")
             svd_data.append((t10, t50, t90, t100))
             svd_count += 1
 
         # Check if the user wants to add a disintegration curve
         image_paths = []
-        add_curve = st.radio("Would you like to add a Disintegration curve?", ("No", "Yes"))
+        add_curve = st.radio("Would you like to add a Disintegration curve?", ("No", "Yes"), key=f"add_curve_{svd_counter}")
         if add_curve == 'Yes':
             # Prompt user for image paths using a file uploader
             for idx in range(1, svd_count):
-                image_path = st.file_uploader(f"Select image for SVD {idx}", type=["png", "jpg", "jpeg"], key=f"image_{idx}")
+                image_path = st.file_uploader(f"Select image for SVD {idx}", type=["png", "jpg", "jpeg"], key=f"image_{svd_counter}_{idx}")
                 if not image_path:
                     break
                 image_paths.append(image_path)
@@ -847,6 +848,9 @@ def tablet_disintegration_slide(presentation, presentation_path, shared_data):
 
         # Add a new disintegration slide for the current media
         add_disintegration_slide(presentation, media, volume, svd_data, image_paths, shared_data)
+
+        # Increment the counter for unique keys
+        svd_counter += 1
 
     # Save the presentation with the new slides
     presentation.save(presentation_path)
