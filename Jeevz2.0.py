@@ -47,6 +47,7 @@ def handle_steps(presentation, presentation_path, shared_data):
         title_slide(presentation, presentation_path, shared_data)
         if st.button("Continue to Hypothesis slide"):
             st.session_state['current_step'] = 1
+            st.experimental_rerun()
         st.write("or")
         if st.button("Download presentation"):
             if save_presentation(presentation, presentation_path):
@@ -57,6 +58,7 @@ def handle_steps(presentation, presentation_path, shared_data):
         hypothesis_rationale_expected_slide(presentation, presentation_path, shared_data)
         if st.button("Continue to Process slide"):
             st.session_state['current_step'] = 2
+            st.experimental_rerun()
         st.write("or")
         if st.button("Download presentation"):
             if save_presentation(presentation, presentation_path):
@@ -67,6 +69,7 @@ def handle_steps(presentation, presentation_path, shared_data):
         processing_slide(presentation, presentation_path, shared_data)
         if st.button("Continue to Compression conditions slide"):
             st.session_state['current_step'] = 3
+            st.experimental_rerun()
         st.write("or")
         if st.button("Download presentation"):
             if save_presentation(presentation, presentation_path):
@@ -77,6 +80,7 @@ def handle_steps(presentation, presentation_path, shared_data):
         compression_conditions_slide(presentation, presentation_path, shared_data)
         if st.button("Continue to Disintegration conditions slide"):
             st.session_state['current_step'] = 4
+            st.experimental_rerun()
         st.write("or")
         if st.button("Download presentation"):
             if save_presentation(presentation, presentation_path):
