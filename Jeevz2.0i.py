@@ -88,6 +88,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
         st.write("Now working on the Hypothesis, Rationale & expected results slide")
         hypothesis_rationale_expected_slide(presentation, presentation_path, shared_data)
         save_presentation(presentation, presentation_path)
+        st.write(f"Number of slides after Hypothesis slide: {len(presentation.slides)}")
         if continue_prompt(1, presentation, presentation_path):
             st.session_state.current_step = 2
         else:
@@ -97,6 +98,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
         st.write("Now working on the Processing slide")
         processing_slide(presentation, presentation_path, shared_data)
         save_presentation(presentation, presentation_path)
+        st.write(f"Number of slides after Processing slide: {len(presentation.slides)}")
         if continue_prompt(2, presentation, presentation_path):
             st.session_state.current_step = 3
         else:
@@ -106,6 +108,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
         st.write("Now working on the Compression conditions slide")
         compression_conditions_slide(presentation, presentation_path, shared_data)
         save_presentation(presentation, presentation_path)
+        st.write(f"Number of slides after Compression conditions slide: {len(presentation.slides)}")
         if continue_prompt(3, presentation, presentation_path):
             st.session_state.current_step = 4
         else:
@@ -115,6 +118,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
         st.write("Now working on the Tablet disintegration slide")
         tablet_disintegration_slide(presentation, presentation_path, shared_data)
         save_presentation(presentation, presentation_path)
+        st.write(f"Number of slides after Tablet disintegration slide: {len(presentation.slides)}")
         if continue_prompt(4, presentation, presentation_path):
             st.session_state.current_step = 5
         else:
@@ -141,7 +145,9 @@ def collect_user_inputs_new_project(presentation, presentation_path, shared_data
 def start_new_project():
     st.write("Starting a new project...")
     presentation_path = st.text_input("Enter the path to save the new presentation:", "new_presentation.pptx")
-    presentation = Presentation()
+    if 'presentation' not in st.session_state:
+        st.session_state.presentation = Presentation()
+    presentation = st.session_state.presentation
     shared_data = {}
 
     if 'current_step' not in st.session_state:
