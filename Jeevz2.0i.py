@@ -32,7 +32,6 @@ def continue_from():
     )
     return ["Hypothesis, Rationale & expected results", "Processing", "Compression conditions", "Tablet disintegration"].index(choice) + 1
 
-# Function to handle the download presentation button
 def download_presentation(presentation, presentation_path, key):
     # Save the presentation to a BytesIO object
     output = BytesIO()
@@ -49,9 +48,6 @@ def download_presentation(presentation, presentation_path, key):
     )
 
 def continue_prompt(step, presentation, presentation_path):
-    # Save the presentation before displaying the download button
-    save_presentation(presentation, presentation_path)
-    
     col1, col2, col3 = st.columns([1, 0.1, 1])
     with col1:
         if step == 0:
@@ -65,6 +61,8 @@ def continue_prompt(step, presentation, presentation_path):
     with col2:
         st.write("or")
     with col3:
+        # Save the presentation before displaying the download button
+        save_presentation(presentation, presentation_path)
         download_presentation(presentation, presentation_path, key=f"download_presentation_{step}")
     
     return continue_button
