@@ -132,6 +132,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
             tablet_disintegration_slide(presentation, presentation_path, shared_data)
         st.write(f"Number of slides after Tablet disintegration slide: {len(presentation.slides)}")
         download_presentation(presentation, presentation_path, 4)  # Always show the download button for step 4
+        return True  # Ensure the function does not return prematurely
 
     return True
 
