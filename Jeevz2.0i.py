@@ -4,6 +4,7 @@ import json
 from importnb import Notebook
 from pptx import Presentation
 import pandas as pd
+from io import BytesIO
 
 # Function to load an existing presentation
 def load_presentation(file):
@@ -31,8 +32,21 @@ def continue_from():
     )
     return ["Hypothesis, Rationale & expected results", "Processing", "Compression conditions", "Tablet disintegration"].index(choice) + 1
 
-# Function to prompt for continuation
-def continue_prompt(step):
+def download_presentation(presentation, presentation_path):
+    # Save the presentation to a BytesIO object
+    output = BytesIO()
+    presentation.save(output)
+    output.seek(0)
+    
+    # Create a download button
+    st.download_button(
+        label="Download presentation",
+        data=output,
+        file_name=presentation_path,
+        mime="application/vnd.openxmlformats-officedocument.presentationml.presentation"
+    )
+
+def continue_prompt(step, presentation, presentation_path):
     col1, col2, col3 = st.columns([1, 0.1, 1])
     with col1:
         if step == 0:
@@ -46,7 +60,7 @@ def continue_prompt(step):
     with col2:
         st.write("or")
     with col3:
-        return st.button("Download presentation", key="download_presentation")
+        download_presentation(presentation, presentation_path)
 
 # Import functions from Functions.ipynb
 with Notebook():
@@ -58,12 +72,11 @@ with Notebook():
         tablet_disintegration_slide,
     )
 
-# Function to collect user inputs and store them temporarily for an existing project
 def collect_user_inputs(presentation, presentation_path, shared_data, start_from=1):
     if start_from <= 1:
         st.write("Now working on the Hypothesis, Rationale & expected results slide")
         hypothesis_rationale_expected_slide(presentation, presentation_path, shared_data)
-        if continue_prompt(1):
+        if continue_prompt(1, presentation, presentation_path):
             st.session_state.current_step = 2
         else:
             return False
@@ -71,7 +84,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
     if start_from <= 2:
         st.write("Now working on the Processing slide")
         processing_slide(presentation, presentation_path, shared_data)
-        if continue_prompt(2):
+        if continue_prompt(2, presentation, presentation_path):
             st.session_state.current_step = 3
         else:
             return False
@@ -79,7 +92,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
     if start_from <= 3:
         st.write("Now working on the Compression conditions slide")
         compression_conditions_slide(presentation, presentation_path, shared_data)
-        if continue_prompt(3):
+        if continue_prompt(3, presentation, presentation_path):
             st.session_state.current_step = 4
         else:
             return False
@@ -87,18 +100,17 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
     if start_from <= 4:
         st.write("Now working on the Tablet disintegration slide")
         tablet_disintegration_slide(presentation, presentation_path, shared_data)
-        if continue_prompt(4):
+        if continue_prompt(4, presentation, presentation_path):
             st.session_state.current_step = 5
         else:
             return False
 
     return True
 
-# Function to collect user inputs and store them temporarily for a new project
 def collect_user_inputs_new_project(presentation, presentation_path, shared_data):
     st.write("Now working on the Title Slide")
     title_slide(presentation, presentation_path, shared_data)
-    if continue_prompt(0):
+    if continue_prompt(0, presentation, presentation_path):
         st.session_state.current_step = 1
     else:
         return False
