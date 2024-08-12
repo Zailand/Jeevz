@@ -50,6 +50,7 @@ def download_presentation(presentation, presentation_path, step):
 
 def continue_prompt(step, presentation, presentation_path):
     col1, col2, col3 = st.columns([1, 0.1, 1])
+    continue_button = None  # Initialize continue_button to None
     with col1:
         if step == 0:
             continue_button = st.button("Continue to Hypothesis slide", key="continue_hypothesis")
@@ -62,13 +63,10 @@ def continue_prompt(step, presentation, presentation_path):
     with col2:
         st.write("or")
     with col3:
-        download_button = st.button("Download presentation", key=f"download_presentation_{step}")
-        if download_button:
-            save_presentation(presentation, presentation_path)
-            download_presentation(presentation, presentation_path, step)
+        download_presentation(presentation, presentation_path, step)
     
     return continue_button
-
+    
 # Import functions from Functions.ipynb
 with Notebook():
     from Functions import (
@@ -133,11 +131,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
         if not slide_exists(presentation, "Tablet disintegration"):
             tablet_disintegration_slide(presentation, presentation_path, shared_data)
         st.write(f"Number of slides after Tablet disintegration slide: {len(presentation.slides)}")
-        if continue_prompt(4, presentation, presentation_path):
-            save_presentation(presentation, presentation_path)
-            st.session_state.current_step = 5
-        else:
-            return False
+        download_presentation(presentation, presentation_path, 4)  # Always show the download button for step 4
 
     return True
 
