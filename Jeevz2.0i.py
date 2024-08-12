@@ -48,8 +48,10 @@ def download_presentation(presentation, presentation_path, key):
         key=key
     )
 
-# Function to prompt for continuation
 def continue_prompt(step, presentation, presentation_path):
+    # Save the presentation before displaying the download button
+    save_presentation(presentation, presentation_path)
+    
     col1, col2, col3 = st.columns([1, 0.1, 1])
     with col1:
         if step == 0:
