@@ -95,8 +95,9 @@ def slide_exists(presentation, slide_title):
 def collect_user_inputs(presentation, presentation_path, shared_data, start_from=1):
     if start_from <= 1:
         st.write("Now working on the Hypothesis, Rationale & expected results slide")
-        hypothesis_rationale_expected_slide(presentation, presentation_path, shared_data)
-        save_presentation(presentation, presentation_path)
+        if not slide_exists(presentation, "Hypothesis, Rationale & expected results"):
+            hypothesis_rationale_expected_slide(presentation, presentation_path, shared_data)
+            save_presentation(presentation, presentation_path)
         st.write(f"Number of slides after Hypothesis slide: {len(presentation.slides)}")
         if continue_prompt(1, presentation, presentation_path):
             st.session_state.current_step = 2
@@ -105,8 +106,9 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
 
     if start_from <= 2:
         st.write("Now working on the Processing slide")
-        processing_slide(presentation, presentation_path, shared_data)
-        save_presentation(presentation, presentation_path)
+        if not slide_exists(presentation, "Processing"):
+            processing_slide(presentation, presentation_path, shared_data)
+            save_presentation(presentation, presentation_path)
         st.write(f"Number of slides after Processing slide: {len(presentation.slides)}")
         if continue_prompt(2, presentation, presentation_path):
             st.session_state.current_step = 3
@@ -115,8 +117,9 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
 
     if start_from <= 3:
         st.write("Now working on the Compression conditions slide")
-        compression_conditions_slide(presentation, presentation_path, shared_data)
-        save_presentation(presentation, presentation_path)
+        if not slide_exists(presentation, "Compression conditions"):
+            compression_conditions_slide(presentation, presentation_path, shared_data)
+            save_presentation(presentation, presentation_path)
         st.write(f"Number of slides after Compression conditions slide: {len(presentation.slides)}")
         if continue_prompt(3, presentation, presentation_path):
             st.session_state.current_step = 4
@@ -125,8 +128,9 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
 
     if start_from <= 4:
         st.write("Now working on the Tablet disintegration slide")
-        tablet_disintegration_slide(presentation, presentation_path, shared_data)
-        save_presentation(presentation, presentation_path)
+        if not slide_exists(presentation, "Tablet disintegration"):
+            tablet_disintegration_slide(presentation, presentation_path, shared_data)
+            save_presentation(presentation, presentation_path)
         st.write(f"Number of slides after Tablet disintegration slide: {len(presentation.slides)}")
         if continue_prompt(4, presentation, presentation_path):
             st.session_state.current_step = 5
@@ -138,8 +142,9 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
 # Function to collect user inputs and store them temporarily for a new project
 def collect_user_inputs_new_project(presentation, presentation_path, shared_data):
     st.write("Now working on the Title Slide")
-    title_slide(presentation, presentation_path, shared_data)
-    save_presentation(presentation, presentation_path)  # Save the presentation after adding the title slide
+    if not slide_exists(presentation, "Formulation Slides"):
+        title_slide(presentation, presentation_path, shared_data)
+        save_presentation(presentation, presentation_path)  # Save the presentation after adding the title slide
     if continue_prompt(0, presentation, presentation_path):
         st.session_state.current_step = 1
     else:
