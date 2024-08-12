@@ -82,6 +82,15 @@ def save_presentation(presentation, presentation_path):
     presentation.save(presentation_path)
     st.success(f"Presentation saved as {presentation_path}")
 
+# Function to check if a slide with specific content already exists
+def slide_exists(presentation, slide_title):
+    for slide in presentation.slides:
+        for shape in slide.shapes:
+            if shape.has_text_frame:
+                if slide_title in shape.text:
+                    return True
+    return False
+
 # Function to collect user inputs and store them temporarily for an existing project
 def collect_user_inputs(presentation, presentation_path, shared_data, start_from=1):
     if start_from <= 1:
