@@ -32,6 +32,7 @@ def continue_from():
     )
     return ["Hypothesis, Rationale & expected results", "Processing", "Compression conditions", "Tablet disintegration"].index(choice) + 1
 
+# Function to handle the download presentation button
 def download_presentation(presentation, presentation_path):
     # Save the presentation to a BytesIO object
     output = BytesIO()
@@ -46,6 +47,7 @@ def download_presentation(presentation, presentation_path):
         mime="application/vnd.openxmlformats-officedocument.presentationml.presentation"
     )
 
+# Function to prompt for continuation
 def continue_prompt(step, presentation, presentation_path):
     col1, col2, col3 = st.columns([1, 0.1, 1])
     with col1:
@@ -72,6 +74,7 @@ with Notebook():
         tablet_disintegration_slide,
     )
 
+# Function to collect user inputs and store them temporarily for an existing project
 def collect_user_inputs(presentation, presentation_path, shared_data, start_from=1):
     if start_from <= 1:
         st.write("Now working on the Hypothesis, Rationale & expected results slide")
@@ -107,6 +110,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
 
     return True
 
+# Function to collect user inputs and store them temporarily for a new project
 def collect_user_inputs_new_project(presentation, presentation_path, shared_data):
     st.write("Now working on the Title Slide")
     title_slide(presentation, presentation_path, shared_data)
