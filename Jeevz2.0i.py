@@ -50,6 +50,7 @@ def download_presentation(presentation, presentation_path, step):
 
 # Function to prompt for continuation
 def continue_prompt(step, presentation, presentation_path):
+    continue_button = None  # Initialize continue_button to None
     col1, col2, col3 = st.columns([1, 0.1, 1])
     with col1:
         if step == 0:
