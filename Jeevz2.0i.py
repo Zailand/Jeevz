@@ -48,9 +48,7 @@ def download_presentation(presentation, presentation_path, step):
         key=f"download_presentation_{step}"
     )
 
-# Function to prompt for continuation
 def continue_prompt(step, presentation, presentation_path):
-    continue_button = None  # Initialize continue_button to None
     col1, col2, col3 = st.columns([1, 0.1, 1])
     with col1:
         if step == 0:
@@ -64,7 +62,10 @@ def continue_prompt(step, presentation, presentation_path):
     with col2:
         st.write("or")
     with col3:
-        download_presentation(presentation, presentation_path, step)
+        download_button = st.button("Download presentation", key=f"download_presentation_{step}")
+        if download_button:
+            save_presentation(presentation, presentation_path)
+            download_presentation(presentation, presentation_path, step)
     
     return continue_button
 
@@ -98,9 +99,9 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
         st.write("Now working on the Hypothesis, Rationale & expected results slide")
         if not slide_exists(presentation, "Hypothesis, Rationale & expected results"):
             hypothesis_rationale_expected_slide(presentation, presentation_path, shared_data)
-            save_presentation(presentation, presentation_path)
         st.write(f"Number of slides after Hypothesis slide: {len(presentation.slides)}")
         if continue_prompt(1, presentation, presentation_path):
+            save_presentation(presentation, presentation_path)
             st.session_state.current_step = 2
         else:
             return False
@@ -109,9 +110,9 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
         st.write("Now working on the Processing slide")
         if not slide_exists(presentation, "Processing"):
             processing_slide(presentation, presentation_path, shared_data)
-            save_presentation(presentation, presentation_path)
         st.write(f"Number of slides after Processing slide: {len(presentation.slides)}")
         if continue_prompt(2, presentation, presentation_path):
+            save_presentation(presentation, presentation_path)
             st.session_state.current_step = 3
         else:
             return False
@@ -120,9 +121,9 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
         st.write("Now working on the Compression conditions slide")
         if not slide_exists(presentation, "Compression conditions"):
             compression_conditions_slide(presentation, presentation_path, shared_data)
-            save_presentation(presentation, presentation_path)
         st.write(f"Number of slides after Compression conditions slide: {len(presentation.slides)}")
         if continue_prompt(3, presentation, presentation_path):
+            save_presentation(presentation, presentation_path)
             st.session_state.current_step = 4
         else:
             return False
@@ -131,9 +132,9 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
         st.write("Now working on the Tablet disintegration slide")
         if not slide_exists(presentation, "Tablet disintegration"):
             tablet_disintegration_slide(presentation, presentation_path, shared_data)
-            save_presentation(presentation, presentation_path)
         st.write(f"Number of slides after Tablet disintegration slide: {len(presentation.slides)}")
         if continue_prompt(4, presentation, presentation_path):
+            save_presentation(presentation, presentation_path)
             st.session_state.current_step = 5
         else:
             return False
