@@ -33,7 +33,7 @@ def continue_from():
     return ["Hypothesis, Rationale & expected results", "Processing", "Compression conditions", "Tablet disintegration"].index(choice) + 1
 
 # Function to handle the download presentation button
-def download_presentation(presentation, presentation_path, key):
+def download_presentation(presentation, presentation_path, step):
     # Save the presentation to a BytesIO object
     output = BytesIO()
     presentation.save(output)
@@ -45,7 +45,7 @@ def download_presentation(presentation, presentation_path, key):
         data=output,
         file_name=presentation_path,
         mime="application/vnd.openxmlformats-officedocument.presentationml.presentation",
-        key=key
+        key=f"download_presentation_{step}"
     )
 
 # Function to prompt for continuation
@@ -63,10 +63,7 @@ def continue_prompt(step, presentation, presentation_path):
     with col2:
         st.write("or")
     with col3:
-        download_button = st.button("Download presentation", key=f"download_presentation_{step}")
-        if download_button:
-            save_presentation(presentation, presentation_path)
-            download_presentation(presentation, presentation_path, key=f"download_presentation_{step}")
+        download_presentation(presentation, presentation_path, step)
     
     return continue_button
 
