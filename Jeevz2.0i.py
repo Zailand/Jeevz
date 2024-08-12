@@ -34,19 +34,22 @@ def continue_from():
 # Function to prompt for continuation
 def continue_prompt(step):
     col1, col2, col3 = st.columns([1, 0.1, 1])
+    continue_clicked, download_clicked = False, False
     with col1:
         if step == 0:
-            return st.button("Continue to Hypothesis slide", key="continue_hypothesis")
+            continue_clicked = st.button("Continue to Hypothesis slide", key="continue_hypothesis")
         elif step == 1:
-            return st.button("Continue to Process slide", key="continue_process")
+            continue_clicked = st.button("Continue to Process slide", key="continue_process")
         elif step == 2:
-            return st.button("Continue to Compression conditions slide", key="continue_compression")
+            continue_clicked = st.button("Continue to Compression conditions slide", key="continue_compression")
         elif step == 3:
-            return st.button("Continue to Disintegration conditions slide", key="continue_disintegration")
+            continue_clicked = st.button("Continue to Disintegration conditions slide", key="continue_disintegration")
     with col2:
         st.write("or")
     with col3:
-        return st.button("Download presentation", key="download_presentation")
+        download_clicked = st.button("Download presentation", key="download_presentation")
+    
+    return continue_clicked, download_clicked
 
 # Import functions from Functions.ipynb
 with Notebook():
@@ -60,10 +63,15 @@ with Notebook():
 
 # Function to collect user inputs and store them temporarily for an existing project
 def collect_user_inputs(presentation, presentation_path, shared_data, start_from=1):
+    continue_clicked, download_clicked = False, False
+
     if start_from <= 1:
         st.write("Now working on the Hypothesis, Rationale & expected results slide")
         hypothesis_rationale_expected_slide(presentation, presentation_path, shared_data)
-        if continue_prompt(1):
+        continue_clicked, download_clicked = continue_prompt(1)
+        if download_clicked:
+            return "download"
+        if continue_clicked:
             st.session_state.current_step = 2
         else:
             return False
@@ -71,7 +79,10 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
     if start_from <= 2:
         st.write("Now working on the Processing slide")
         processing_slide(presentation, presentation_path, shared_data)
-        if continue_prompt(2):
+        continue_clicked, download_clicked = continue_prompt(2)
+        if download_clicked:
+            return "download"
+        if continue_clicked:
             st.session_state.current_step = 3
         else:
             return False
@@ -79,7 +90,10 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
     if start_from <= 3:
         st.write("Now working on the Compression conditions slide")
         compression_conditions_slide(presentation, presentation_path, shared_data)
-        if continue_prompt(3):
+        continue_clicked, download_clicked = continue_prompt(3)
+        if download_clicked:
+            return "download"
+        if continue_clicked:
             st.session_state.current_step = 4
         else:
             return False
@@ -87,7 +101,10 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
     if start_from <= 4:
         st.write("Now working on the Tablet disintegration slide")
         tablet_disintegration_slide(presentation, presentation_path, shared_data)
-        if continue_prompt(4):
+        continue_clicked, download_clicked = continue_prompt(4)
+        if download_clicked:
+            return "download"
+        if continue_clicked:
             st.session_state.current_step = 5
         else:
             return False
@@ -98,15 +115,18 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
 def collect_user_inputs_new_project(presentation, presentation_path, shared_data):
     st.write("Now working on the Title Slide")
     title_slide(presentation, presentation_path, shared_data)
-    if continue_prompt(0):
+    continue_clicked, download_clicked = continue_prompt(0)
+    if download_clicked:
+        return "download"
+    if continue_clicked:
         st.session_state.current_step = 1
     else:
         return False
 
-    if not collect_user_inputs(presentation, presentation_path, shared_data, start_from=1):
-        return False
-
-    return True
+    result = collect_user_inputs(presentation, presentation_path, shared_data, start_from=1)
+    if result == "download":
+        return "download"
+    return result
 
 # Function to start a new project
 def start_new_project():
@@ -118,12 +138,9 @@ def start_new_project():
     if 'current_step' not in st.session_state:
         st.session_state.current_step = 0
 
-    if st.session_state.current_step == 0:
-        if collect_user_inputs_new_project(presentation, presentation_path, shared_data):
-            save_presentation(presentation, presentation_path)
-    else:
-        if collect_user_inputs(presentation, presentation_path, shared_data, start_from=st.session_state.current_step):
-            save_presentation(presentation, presentation_path)
+    result = collect_user_inputs_new_project(presentation, presentation_path, shared_data)
+    if result == "download" or result:
+        save_presentation(presentation, presentation_path)
 
 # Function to load an existing project
 def load_existing_project():
@@ -137,7 +154,8 @@ def load_existing_project():
         if 'current_step' not in st.session_state:
             st.session_state.current_step = start_from
 
-        if collect_user_inputs(presentation, uploaded_file.name, shared_data, start_from=st.session_state.current_step):
+        result = collect_user_inputs(presentation, uploaded_file.name, shared_data, start_from=st.session_state.current_step)
+        if result == "download" or result:
             save_presentation(presentation, uploaded_file.name)
 
 # Main function to ask the user if they want to start a new project or load an existing one
