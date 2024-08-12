@@ -32,7 +32,6 @@ def continue_from():
     )
     return ["Hypothesis, Rationale & expected results", "Processing", "Compression conditions", "Tablet disintegration"].index(choice) + 1
 
-# Function to handle the download presentation button
 def download_presentation(presentation, presentation_path):
     # Save the presentation to a BytesIO object
     output = BytesIO()
@@ -47,22 +46,23 @@ def download_presentation(presentation, presentation_path):
         mime="application/vnd.openxmlformats-officedocument.presentationml.presentation"
     )
 
-# Function to prompt for continuation
 def continue_prompt(step, presentation, presentation_path):
     col1, col2, col3 = st.columns([1, 0.1, 1])
     with col1:
         if step == 0:
-            return st.button("Continue to Hypothesis slide", key="continue_hypothesis")
+            continue_button = st.button("Continue to Hypothesis slide", key="continue_hypothesis")
         elif step == 1:
-            return st.button("Continue to Process slide", key="continue_process")
+            continue_button = st.button("Continue to Process slide", key="continue_process")
         elif step == 2:
-            return st.button("Continue to Compression conditions slide", key="continue_compression")
+            continue_button = st.button("Continue to Compression conditions slide", key="continue_compression")
         elif step == 3:
-            return st.button("Continue to Disintegration conditions slide", key="continue_disintegration")
+            continue_button = st.button("Continue to Disintegration conditions slide", key="continue_disintegration")
     with col2:
         st.write("or")
     with col3:
         download_presentation(presentation, presentation_path)
+    
+    return continue_button
 
 # Import functions from Functions.ipynb
 with Notebook():
@@ -74,7 +74,6 @@ with Notebook():
         tablet_disintegration_slide,
     )
 
-# Function to collect user inputs and store them temporarily for an existing project
 def collect_user_inputs(presentation, presentation_path, shared_data, start_from=1):
     if start_from <= 1:
         st.write("Now working on the Hypothesis, Rationale & expected results slide")
@@ -110,7 +109,6 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
 
     return True
 
-# Function to collect user inputs and store them temporarily for a new project
 def collect_user_inputs_new_project(presentation, presentation_path, shared_data):
     st.write("Now working on the Title Slide")
     title_slide(presentation, presentation_path, shared_data)
@@ -123,7 +121,7 @@ def collect_user_inputs_new_project(presentation, presentation_path, shared_data
         return False
 
     return True
-
+    
 # Function to start a new project
 def start_new_project():
     st.write("Starting a new project...")
