@@ -128,11 +128,20 @@ def collect_user_inputs_new_project(presentation, presentation_path, shared_data
         return "download"
     return result
 
-# Function to save the presentation with error handling
+# Function to save the presentation with error handling and provide a download link
 def save_presentation(presentation, presentation_path):
     try:
         presentation.save(presentation_path)
         st.success(f"Presentation saved as {presentation_path}")
+
+        # Provide a download link
+        with open(presentation_path, "rb") as file:
+            btn = st.download_button(
+                label="Download presentation",
+                data=file,
+                file_name=presentation_path,
+                mime="application/vnd.openxmlformats-officedocument.presentationml.presentation"
+            )
         return True
     except IOError:
         st.error(f"The file '{presentation_path}' cannot be saved. It might be open or you might not have permission.")
