@@ -47,7 +47,7 @@ def continue_prompt(step):
     with col2:
         st.write("or")
     with col3:
-        download_clicked = st.button("Download presentation", key="download_presentation")
+        download_clicked = st.button("Download presentation", key=f"download_presentation_{step}")
     
     return continue_clicked, download_clicked
 
