@@ -32,7 +32,7 @@ def continue_from():
     return ["Hypothesis, Rationale & expected results", "Processing", "Compression conditions", "Tablet disintegration"].index(choice) + 1
 
 # Function to prompt for continuation
-def continue_prompt(step):
+def continue_prompt(step, presentation=None, presentation_path=None):
     col1, col2, col3 = st.columns([1, 0.1, 1])
     continue_clicked, download_clicked = False, False
     with col1:
@@ -47,7 +47,15 @@ def continue_prompt(step):
     with col2:
         st.write("or")
     with col3:
-        download_clicked = st.button("Download presentation", key=f"download_presentation_{step}")
+        if presentation and presentation_path:
+            with open(presentation_path, "rb") as file:
+                download_clicked = st.download_button(
+                    label="Download presentation",
+                    data=file,
+                    file_name=presentation_path,
+                    mime="application/vnd.openxmlformats-officedocument.presentationml.presentation",
+                    key=f"download_presentation_{step}"
+                )
     
     return continue_clicked, download_clicked
 
@@ -68,7 +76,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
     if start_from <= 1:
         st.write("Now working on the Hypothesis, Rationale & expected results slide")
         hypothesis_rationale_expected_slide(presentation, presentation_path, shared_data)
-        continue_clicked, download_clicked = continue_prompt(1)
+        continue_clicked, download_clicked = continue_prompt(1, presentation, presentation_path)
         if download_clicked:
             return "download"
         if continue_clicked:
@@ -79,7 +87,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
     if start_from <= 2:
         st.write("Now working on the Processing slide")
         processing_slide(presentation, presentation_path, shared_data)
-        continue_clicked, download_clicked = continue_prompt(2)
+        continue_clicked, download_clicked = continue_prompt(2, presentation, presentation_path)
         if download_clicked:
             return "download"
         if continue_clicked:
@@ -90,7 +98,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
     if start_from <= 3:
         st.write("Now working on the Compression conditions slide")
         compression_conditions_slide(presentation, presentation_path, shared_data)
-        continue_clicked, download_clicked = continue_prompt(3)
+        continue_clicked, download_clicked = continue_prompt(3, presentation, presentation_path)
         if download_clicked:
             return "download"
         if continue_clicked:
@@ -101,7 +109,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
     if start_from <= 4:
         st.write("Now working on the Tablet disintegration slide")
         tablet_disintegration_slide(presentation, presentation_path, shared_data)
-        continue_clicked, download_clicked = continue_prompt(4)
+        continue_clicked, download_clicked = continue_prompt(4, presentation, presentation_path)
         if download_clicked:
             return "download"
         if continue_clicked:
@@ -115,7 +123,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
 def collect_user_inputs_new_project(presentation, presentation_path, shared_data):
     st.write("Now working on the Title Slide")
     title_slide(presentation, presentation_path, shared_data)
-    continue_clicked, download_clicked = continue_prompt(0)
+    continue_clicked, download_clicked = continue_prompt(0, presentation, presentation_path)
     if download_clicked:
         return "download"
     if continue_clicked:
