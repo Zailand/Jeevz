@@ -128,6 +128,16 @@ def collect_user_inputs_new_project(presentation, presentation_path, shared_data
         return "download"
     return result
 
+# Function to save the presentation with error handling
+def save_presentation(presentation, presentation_path):
+    try:
+        presentation.save(presentation_path)
+        st.success(f"Presentation saved as {presentation_path}")
+        return True
+    except IOError:
+        st.error(f"The file '{presentation_path}' cannot be saved. It might be open or you might not have permission.")
+        return False
+
 # Function to start a new project
 def start_new_project():
     st.write("Starting a new project...")
