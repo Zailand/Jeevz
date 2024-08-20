@@ -46,20 +46,20 @@ def continue_prompt(step):
     with col2:
         st.write("or")
     with col3:
-        if st.button("Download presentation", key="download_presentation"):
+        if st.button("Download presentation", key=f"download_presentation_{step}"):
             download_presentation()
 
 # Function to handle the download button click
 def download_presentation():
     presentation_path = st.session_state.get('presentation_path', 'new_presentation.pptx')
     with open(presentation_path, "rb") as file:
-        btn = st.download_button(
+        st.download_button(
             label="Download presentation",
             data=file,
             file_name=presentation_path,
-            mime="application/vnd.openxmlformats-officedocument.presentationml.presentation"
+            mime="application/vnd.openxmlformats-officedocument.presentationml.presentation",
+            key="download_button"
         )
-    return btn
 
 # Import functions from Functions.ipynb
 with Notebook():
