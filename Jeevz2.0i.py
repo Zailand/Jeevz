@@ -9,13 +9,6 @@ import pandas as pd
 # Configure logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
-def save_presentation(presentation, step):
-    presentation_path = st.session_state.get('presentation_path', 'new_presentation.pptx')
-    new_presentation_path = f"new_presentation_step_{step}.pptx"
-    presentation.save(new_presentation_path)
-    logging.debug(f"Saved presentation after step {step}: {new_presentation_path}")
-    return new_presentation_path
-
 # Function to load an existing presentation
 def load_presentation(file):
     presentation = Presentation(file)
@@ -91,6 +84,15 @@ def download_presentation():
             key="download_button"
         )
 
+# Function to save the presentation with a unique filename for each step
+def save_presentation(presentation, step):
+    presentation_path = st.session_state.get('presentation_path', 'new_presentation.pptx')
+    new_presentation_path = f"new_presentation_step_{step}.pptx"
+    presentation.save(new_presentation_path)
+    logging.debug(f"Saved presentation after step {step}: {new_presentation_path}")
+    st.session_state['presentation_path'] = new_presentation_path
+    return new_presentation_path
+
 # Import functions from Functions.ipynb
 with Notebook():
     from Functions import (
@@ -111,9 +113,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
         slides_dict['Hypothesis, Rationale & expected results'] = 'Added'
         st.session_state.slides_dict = slides_dict
         st.write(f"Slides added: {len(slides_dict)}")
-        logging.debug(f"Added slide: Hypothesis, Rationale & expected results")
-        presentation.save(presentation_path)  # Save the presentation after adding the slide
-        logging.debug(f"Saved presentation after adding Hypothesis slide: {presentation_path}")
+        presentation_path = save_presentation(presentation, 1)  # Save the presentation after adding the slide
         continue_button, download_button = continue_prompt(1)
         if download_button:
             download_presentation()
@@ -128,9 +128,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
         slides_dict['Processing'] = 'Added'
         st.session_state.slides_dict = slides_dict
         st.write(f"Slides added: {len(slides_dict)}")
-        logging.debug(f"Added slide: Processing")
-        presentation.save(presentation_path)  # Save the presentation after adding the slide
-        logging.debug(f"Saved presentation after adding Processing slide: {presentation_path}")
+        presentation_path = save_presentation(presentation, 2)  # Save the presentation after adding the slide
         continue_button, download_button = continue_prompt(2)
         if download_button:
             download_presentation()
@@ -145,9 +143,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
         slides_dict['Compression conditions'] = 'Added'
         st.session_state.slides_dict = slides_dict
         st.write(f"Slides added: {len(slides_dict)}")
-        logging.debug(f"Added slide: Compression conditions")
-        presentation.save(presentation_path)  # Save the presentation after adding the slide
-        logging.debug(f"Saved presentation after adding Compression conditions slide: {presentation_path}")
+        presentation_path = save_presentation(presentation, 3)  # Save the presentation after adding the slide
         continue_button, download_button = continue_prompt(3)
         if download_button:
             download_presentation()
@@ -162,9 +158,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
         slides_dict['Tablet disintegration'] = 'Added'
         st.session_state.slides_dict = slides_dict
         st.write(f"Slides added: {len(slides_dict)}")
-        logging.debug(f"Added slide: Tablet disintegration")
-        presentation.save(presentation_path)  # Save the presentation after adding the slide
-        logging.debug(f"Saved presentation after adding Tablet disintegration slide: {presentation_path}")
+        presentation_path = save_presentation(presentation, 4)  # Save the presentation after adding the slide
         continue_button, download_button = continue_prompt(4)
         if download_button:
             download_presentation()
@@ -184,9 +178,7 @@ def collect_user_inputs_new_project(presentation, presentation_path, shared_data
     slides_dict['Title Slide'] = 'Added'
     st.session_state.slides_dict = slides_dict
     st.write(f"Slides added: {len(slides_dict)}")
-    logging.debug(f"Added slide: Title Slide")
-    presentation.save(presentation_path)  # Save the presentation after adding the slide
-    logging.debug(f"Saved presentation after adding Title slide: {presentation_path}")
+    presentation_path = save_presentation(presentation, 0)  # Save the presentation after adding the slide
     continue_button, download_button = continue_prompt(0)
     if download_button:
         download_presentation()
