@@ -57,7 +57,6 @@ def continue_prompt(step):
 
 # Function to handle the download button click
 def download_presentation():
-    presentation_path = st.session_state.get('presentation_path', 'new_presentation.pptx')
     slides_dict = st.session_state.get('slides_dict', {})
     
     # Save the dictionary to a JSON file
@@ -68,14 +67,17 @@ def download_presentation():
     # Merge all presentation steps into one final presentation
     final_presentation_path = merge_presentations()
 
-    # Create a zip file containing the presentation and the dictionary
+    # Create a zip file containing the final presentation, step presentations, and the dictionary
     import zipfile
     zip_path = 'presentation_and_dict.zip'
     with zipfile.ZipFile(zip_path, 'w') as zipf:
+        step_files = sorted([f for f in os.listdir() if f.startswith("new_presentation_step_") and f.endswith(".pptx")])
+        for step_file in step_files:
+            zipf.write(step_file)
         zipf.write(final_presentation_path, os.path.basename(final_presentation_path))
         zipf.write(dict_path, os.path.basename(dict_path))
     
-    logging.debug(f"Created zip file: {zip_path} with presentation and dictionary")
+    logging.debug(f"Created zip file: {zip_path} with presentation, step files, and dictionary")
 
     # Provide the zip file for download
     with open(zip_path, "rb") as file:
