@@ -54,12 +54,27 @@ def continue_prompt(step):
 # Function to handle the download button click
 def download_presentation():
     presentation_path = st.session_state.get('presentation_path', 'new_presentation.pptx')
-    with open(presentation_path, "rb") as file:
+    slides_dict = st.session_state.get('slides_dict', {})
+    
+    # Save the dictionary to a JSON file
+    dict_path = 'slides_dict.json'
+    with open(dict_path, 'w') as dict_file:
+        json.dump(slides_dict, dict_file)
+    
+    # Create a zip file containing the presentation and the dictionary
+    import zipfile
+    zip_path = 'presentation_and_dict.zip'
+    with zipfile.ZipFile(zip_path, 'w') as zipf:
+        zipf.write(presentation_path)
+        zipf.write(dict_path)
+    
+    # Provide the zip file for download
+    with open(zip_path, "rb") as file:
         st.download_button(
-            label="Download presentation",
+            label="Download presentation and dictionary",
             data=file,
-            file_name=presentation_path,
-            mime="application/vnd.openxmlformats-officedocument.presentationml.presentation",
+            file_name=zip_path,
+            mime="application/zip",
             key="download_button"
         )
 
