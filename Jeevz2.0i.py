@@ -65,11 +65,14 @@ def download_presentation():
     with open(dict_path, 'w') as dict_file:
         json.dump(slides_dict, dict_file)
     
+    # Merge all presentation steps into one final presentation
+    final_presentation_path = merge_presentations()
+
     # Create a zip file containing the presentation and the dictionary
     import zipfile
     zip_path = 'presentation_and_dict.zip'
     with zipfile.ZipFile(zip_path, 'w') as zipf:
-        zipf.write(presentation_path, os.path.basename(presentation_path))
+        zipf.write(final_presentation_path, os.path.basename(final_presentation_path))
         zipf.write(dict_path, os.path.basename(dict_path))
     
     logging.debug(f"Created zip file: {zip_path} with presentation and dictionary")
@@ -86,12 +89,29 @@ def download_presentation():
 
 # Function to save the presentation with a unique filename for each step
 def save_presentation(presentation, step):
-    presentation_path = st.session_state.get('presentation_path', 'new_presentation.pptx')
     new_presentation_path = f"new_presentation_step_{step}.pptx"
     presentation.save(new_presentation_path)
     logging.debug(f"Saved presentation after step {step}: {new_presentation_path}")
-    st.session_state['presentation_path'] = new_presentation_path
     return new_presentation_path
+
+# Function to merge all presentations into one final presentation
+def merge_presentations():
+    final_presentation = Presentation()
+    step_files = sorted([f for f in os.listdir() if f.startswith("new_presentation_step_") and f.endswith(".pptx")])
+
+    for step_file in step_files:
+        step_presentation = Presentation(step_file)
+        for slide in step_presentation.slides:
+            slide_elements = slide.shapes._spTree
+            new_slide_layout = final_presentation.slide_layouts[5]  # Choosing a blank layout
+            new_slide = final_presentation.slides.add_slide(new_slide_layout)
+            for element in slide_elements:
+                new_slide.shapes._spTree.insert_element_before(element, 'p:extLst')
+    
+    final_presentation_path = "new_presentation_final.pptx"
+    final_presentation.save(final_presentation_path)
+    logging.debug(f"Final merged presentation saved as: {final_presentation_path}")
+    return final_presentation_path
 
 # Import functions from Functions.ipynb
 with Notebook():
@@ -113,7 +133,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
         slides_dict['Hypothesis, Rationale & expected results'] = 'Added'
         st.session_state.slides_dict = slides_dict
         st.write(f"Slides added: {len(slides_dict)}")
-        presentation_path = save_presentation(presentation, 1)  # Save the presentation after adding the slide
+        save_presentation(presentation, 1)  # Save the presentation after adding the slide
         continue_button, download_button = continue_prompt(1)
         if download_button:
             download_presentation()
@@ -128,7 +148,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
         slides_dict['Processing'] = 'Added'
         st.session_state.slides_dict = slides_dict
         st.write(f"Slides added: {len(slides_dict)}")
-        presentation_path = save_presentation(presentation, 2)  # Save the presentation after adding the slide
+        save_presentation(presentation, 2)  # Save the presentation after adding the slide
         continue_button, download_button = continue_prompt(2)
         if download_button:
             download_presentation()
@@ -143,7 +163,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
         slides_dict['Compression conditions'] = 'Added'
         st.session_state.slides_dict = slides_dict
         st.write(f"Slides added: {len(slides_dict)}")
-        presentation_path = save_presentation(presentation, 3)  # Save the presentation after adding the slide
+        save_presentation(presentation, 3)  # Save the presentation after adding the slide
         continue_button, download_button = continue_prompt(3)
         if download_button:
             download_presentation()
@@ -158,7 +178,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
         slides_dict['Tablet disintegration'] = 'Added'
         st.session_state.slides_dict = slides_dict
         st.write(f"Slides added: {len(slides_dict)}")
-        presentation_path = save_presentation(presentation, 4)  # Save the presentation after adding the slide
+        save_presentation(presentation, 4)  # Save the presentation after adding the slide
         continue_button, download_button = continue_prompt(4)
         if download_button:
             download_presentation()
@@ -178,7 +198,7 @@ def collect_user_inputs_new_project(presentation, presentation_path, shared_data
     slides_dict['Title Slide'] = 'Added'
     st.session_state.slides_dict = slides_dict
     st.write(f"Slides added: {len(slides_dict)}")
-    presentation_path = save_presentation(presentation, 0)  # Save the presentation after adding the slide
+    save_presentation(presentation, 0)  # Save the presentation after adding the slide
     continue_button, download_button = continue_prompt(0)
     if download_button:
         download_presentation()
