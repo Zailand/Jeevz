@@ -47,9 +47,8 @@ def continue_prompt(step):
         with col2:
             st.write("or")
         with col3:
-            if st.form_submit_button("Download presentation"):
-                download_presentation()
-        return continue_button
+            download_button = st.form_submit_button("Download presentation")
+        return continue_button, download_button
 
 # Function to handle the download button click
 def download_presentation():
@@ -65,8 +64,8 @@ def download_presentation():
     import zipfile
     zip_path = 'presentation_and_dict.zip'
     with zipfile.ZipFile(zip_path, 'w') as zipf:
-        zipf.write(presentation_path)
-        zipf.write(dict_path)
+        zipf.write(presentation_path, os.path.basename(presentation_path))
+        zipf.write(dict_path, os.path.basename(dict_path))
     
     # Provide the zip file for download
     with open(zip_path, "rb") as file:
@@ -98,7 +97,10 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
         slides_dict['Hypothesis, Rationale & expected results'] = 'Added'
         st.session_state.slides_dict = slides_dict
         st.write(f"Slides added: {len(slides_dict)}")
-        if continue_prompt(1):
+        continue_button, download_button = continue_prompt(1)
+        if download_button:
+            download_presentation()
+        if continue_button:
             st.session_state.current_step = 2
         else:
             return False
@@ -109,7 +111,10 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
         slides_dict['Processing'] = 'Added'
         st.session_state.slides_dict = slides_dict
         st.write(f"Slides added: {len(slides_dict)}")
-        if continue_prompt(2):
+        continue_button, download_button = continue_prompt(2)
+        if download_button:
+            download_presentation()
+        if continue_button:
             st.session_state.current_step = 3
         else:
             return False
@@ -120,7 +125,10 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
         slides_dict['Compression conditions'] = 'Added'
         st.session_state.slides_dict = slides_dict
         st.write(f"Slides added: {len(slides_dict)}")
-        if continue_prompt(3):
+        continue_button, download_button = continue_prompt(3)
+        if download_button:
+            download_presentation()
+        if continue_button:
             st.session_state.current_step = 4
         else:
             return False
@@ -131,7 +139,10 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
         slides_dict['Tablet disintegration'] = 'Added'
         st.session_state.slides_dict = slides_dict
         st.write(f"Slides added: {len(slides_dict)}")
-        if continue_prompt(4):
+        continue_button, download_button = continue_prompt(4)
+        if download_button:
+            download_presentation()
+        if continue_button:
             st.session_state.current_step = 5
         else:
             return False
@@ -147,7 +158,10 @@ def collect_user_inputs_new_project(presentation, presentation_path, shared_data
     slides_dict['Title Slide'] = 'Added'
     st.session_state.slides_dict = slides_dict
     st.write(f"Slides added: {len(slides_dict)}")
-    if continue_prompt(0):
+    continue_button, download_button = continue_prompt(0)
+    if download_button:
+        download_presentation()
+    if continue_button:
         st.session_state.current_step = 1
     else:
         return False
