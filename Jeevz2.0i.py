@@ -72,6 +72,11 @@ def mark_slide_as_saved(step):
         st.session_state.saved_slides = {}
     st.session_state.saved_slides[step] = True
 
+# Function to display the number of slides saved
+def display_saved_slides_count():
+    saved_slides = st.session_state.get('saved_slides', {})
+    st.write(f"Number of slides saved: {len(saved_slides)}")
+
 # Import functions from Functions.ipynb
 with Notebook():
     from Functions import (
@@ -90,6 +95,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
             hypothesis_rationale_expected_slide(presentation, presentation_path, shared_data)
             mark_slide_as_saved(1)
             save_presentation(presentation, presentation_path)
+        display_saved_slides_count()
         continue_button, download_button = continue_prompt(1)
         if continue_button:
             st.session_state.current_step = 2
@@ -104,6 +110,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
             processing_slide(presentation, presentation_path, shared_data)
             mark_slide_as_saved(2)
             save_presentation(presentation, presentation_path)
+        display_saved_slides_count()
         continue_button, download_button = continue_prompt(2)
         if continue_button:
             st.session_state.current_step = 3
@@ -118,6 +125,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
             compression_conditions_slide(presentation, presentation_path, shared_data)
             mark_slide_as_saved(3)
             save_presentation(presentation, presentation_path)
+        display_saved_slides_count()
         continue_button, download_button = continue_prompt(3)
         if continue_button:
             st.session_state.current_step = 4
@@ -132,6 +140,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
             tablet_disintegration_slide(presentation, presentation_path, shared_data)
             mark_slide_as_saved(4)
             save_presentation(presentation, presentation_path)
+        display_saved_slides_count()
         continue_button, download_button = continue_prompt(4)
         if continue_button:
             st.session_state.current_step = 5
@@ -149,6 +158,7 @@ def collect_user_inputs_new_project(presentation, presentation_path, shared_data
         title_slide(presentation, presentation_path, shared_data)
         mark_slide_as_saved(0)
         save_presentation(presentation, presentation_path)
+    display_saved_slides_count()
     continue_button, download_button = continue_prompt(0)
     if continue_button:
         st.session_state.current_step = 1
