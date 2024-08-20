@@ -33,21 +33,23 @@ def continue_from():
 
 # Function to prompt for continuation
 def continue_prompt(step):
-    col1, col2, col3 = st.columns([1, 0.1, 1])
-    with col1:
-        if step == 0:
-            return st.button("Continue to Hypothesis slide", key="continue_hypothesis")
-        elif step == 1:
-            return st.button("Continue to Process slide", key="continue_process")
-        elif step == 2:
-            return st.button("Continue to Compression conditions slide", key="continue_compression")
-        elif step == 3:
-            return st.button("Continue to Disintegration conditions slide", key="continue_disintegration")
-    with col2:
-        st.write("or")
-    with col3:
-        if st.button("Download presentation", key=f"download_presentation_{step}"):
-            download_presentation()
+    with st.form(key=f"form_{step}"):
+        col1, col2, col3 = st.columns([1, 0.1, 1])
+        with col1:
+            if step == 0:
+                continue_button = st.form_submit_button("Continue to Hypothesis slide")
+            elif step == 1:
+                continue_button = st.form_submit_button("Continue to Process slide")
+            elif step == 2:
+                continue_button = st.form_submit_button("Continue to Compression conditions slide")
+            elif step == 3:
+                continue_button = st.form_submit_button("Continue to Disintegration conditions slide")
+        with col2:
+            st.write("or")
+        with col3:
+            if st.form_submit_button("Download presentation"):
+                download_presentation()
+        return continue_button
 
 # Function to handle the download button click
 def download_presentation():
