@@ -33,22 +33,21 @@ def continue_from():
 
 # Function to prompt for continuation
 def continue_prompt(step):
-    with st.form(key=f"form_{step}"):
-        col1, col2, col3 = st.columns([1, 0.1, 1])
-        with col1:
-            if step == 0:
-                continue_button = st.form_submit_button("Continue to Hypothesis slide")
-            elif step == 1:
-                continue_button = st.form_submit_button("Continue to Process slide")
-            elif step == 2:
-                continue_button = st.form_submit_button("Continue to Compression conditions slide")
-            elif step == 3:
-                continue_button = st.form_submit_button("Continue to Disintegration conditions slide")
-        with col2:
-            st.write("or")
-        with col3:
-            download_button = st.form_submit_button("Download presentation")
-        return continue_button, download_button
+    col1, col2, col3 = st.columns([1, 0.1, 1])
+    with col1:
+        if step == 0:
+            continue_button = st.button("Continue to Hypothesis slide")
+        elif step == 1:
+            continue_button = st.button("Continue to Process slide")
+        elif step == 2:
+            continue_button = st.button("Continue to Compression conditions slide")
+        elif step == 3:
+            continue_button = st.button("Continue to Disintegration conditions slide")
+    with col2:
+        st.write("or")
+    with col3:
+        download_button = st.button("Download presentation")
+    return continue_button, download_button
 
 # Function to handle the download button click
 def download_presentation():
@@ -58,8 +57,7 @@ def download_presentation():
             label="Download presentation",
             data=file,
             file_name=presentation_path,
-            mime="application/vnd.openxmlformats-officedocument.presentationml.presentation",
-            key="download_button"
+            mime="application/vnd.openxmlformats-officedocument.presentationml.presentation"
         )
 
 # Function to check if a slide has been saved
