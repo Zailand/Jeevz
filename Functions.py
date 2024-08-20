@@ -407,6 +407,12 @@ def processing_slide(presentation, presentation_path, shared_data):
         cell.text_frame.paragraphs[0].font.name = 'Verdana'
         cell.text_frame.paragraphs[0].font.size = Pt(12)
 
+    # Save shared_data as JSON in the notes section of the slide
+    notes_slide = slide.notes_slide
+    notes_text_frame = notes_slide.notes_text_frame
+    notes_text_frame.clear()
+    notes_text_frame.text = json.dumps(shared_data, indent=2)
+
     # Save the presentation with the new slide
     presentation.save(presentation_path)
     st.success(f"New slide added and saved in the presentation as {presentation_path}.")
