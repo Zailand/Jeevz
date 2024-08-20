@@ -48,23 +48,11 @@ def continue_prompt(step):
     with col3:
         return st.button("Download presentation", key="download_presentation")
 
-# Function to save the presentation
 def save_presentation(presentation, presentation_path):
-    presentation.save(presentation_path)
-    st.session_state['presentation_path'] = presentation_path
-
-# Function to handle the download button click
-def download_presentation():
-    presentation_path = st.session_state.get('presentation_path', 'new_presentation.pptx')
-    with open(presentation_path, "rb") as file:
-        st.download_button(
-            label="Download presentation",
-            data=file,
-            file_name=presentation_path,
-            mime="application/vnd.openxmlformats-officedocument.presentationml.presentation",
-            key="download_button"
-        )
-
+    new_presentation_path = f"new_presentation_step.pptx"
+    presentation.save(new_presentation_path)
+    return new_presentation_path
+    
 # Import functions from Functions.ipynb
 with Notebook():
     from Functions import (
@@ -169,9 +157,6 @@ def main():
         start_new_project()
     elif choice == "Load an existing project":
         load_existing_project()
-
-    if st.button("Download presentation", key="download_presentation"):
-        download_presentation()
 
 # Run the main function
 if __name__ == "__main__":
