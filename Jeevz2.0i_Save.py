@@ -52,6 +52,18 @@ def save_presentation(presentation, presentation_path):
     new_presentation_path = f"new_presentation_step.pptx"
     presentation.save(new_presentation_path)
     return new_presentation_path
+
+# Function to handle the download button click
+def download_presentation():
+    presentation_path = st.session_state.get('presentation_path', 'new_presentation.pptx')
+    with open(presentation_path, "rb") as file:
+        st.download_button(
+            label="Download presentation",
+            data=file,
+            file_name=presentation_path,
+            mime="application/vnd.openxmlformats-officedocument.presentationml.presentation",
+            key="download_button"
+        )
     
 # Import functions from Functions.ipynb
 with Notebook():
