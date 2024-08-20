@@ -48,10 +48,9 @@ def continue_prompt(step):
     with col3:
         return st.button("Download presentation", key="download_presentation")
 
-def save_presentation(presentation, step):
-    new_presentation_path = f"new_presentation_step_{step}.pptx"
+def save_presentation(presentation):
+    new_presentation_path = f"new_presentation_step.pptx"
     presentation.save(new_presentation_path)
-    logging.debug(f"Saved presentation after step {step}: {new_presentation_path}")
     return new_presentation_path
     
 # Import functions from Functions.ipynb
