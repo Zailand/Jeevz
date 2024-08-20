@@ -47,9 +47,8 @@ def continue_prompt(step):
         with col2:
             st.write("or")
         with col3:
-            if st.form_submit_button("Download presentation"):
-                download_presentation()
-        return continue_button
+            download_button = st.form_submit_button("Download presentation")
+        return continue_button, download_button
 
 # Function to handle the download button click
 def download_presentation():
@@ -78,32 +77,44 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
     if start_from <= 1:
         st.write("Now working on the Hypothesis, Rationale & expected results slide")
         hypothesis_rationale_expected_slide(presentation, presentation_path, shared_data)
-        if continue_prompt(1):
+        continue_button, download_button = continue_prompt(1)
+        if continue_button:
             st.session_state.current_step = 2
+        elif download_button:
+            download_presentation()
         else:
             return False
 
     if start_from <= 2:
         st.write("Now working on the Processing slide")
         processing_slide(presentation, presentation_path, shared_data)
-        if continue_prompt(2):
+        continue_button, download_button = continue_prompt(2)
+        if continue_button:
             st.session_state.current_step = 3
+        elif download_button:
+            download_presentation()
         else:
             return False
 
     if start_from <= 3:
         st.write("Now working on the Compression conditions slide")
         compression_conditions_slide(presentation, presentation_path, shared_data)
-        if continue_prompt(3):
+        continue_button, download_button = continue_prompt(3)
+        if continue_button:
             st.session_state.current_step = 4
+        elif download_button:
+            download_presentation()
         else:
             return False
 
     if start_from <= 4:
         st.write("Now working on the Tablet disintegration slide")
         tablet_disintegration_slide(presentation, presentation_path, shared_data)
-        if continue_prompt(4):
+        continue_button, download_button = continue_prompt(4)
+        if continue_button:
             st.session_state.current_step = 5
+        elif download_button:
+            download_presentation()
         else:
             return False
 
@@ -113,8 +124,11 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
 def collect_user_inputs_new_project(presentation, presentation_path, shared_data):
     st.write("Now working on the Title Slide")
     title_slide(presentation, presentation_path, shared_data)
-    if continue_prompt(0):
+    continue_button, download_button = continue_prompt(0)
+    if continue_button:
         st.session_state.current_step = 1
+    elif download_button:
+        download_presentation()
     else:
         return False
 
