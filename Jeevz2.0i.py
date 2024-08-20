@@ -46,7 +46,20 @@ def continue_prompt(step):
     with col2:
         st.write("or")
     with col3:
-        return st.button("Download presentation", key="download_presentation")
+        if st.button("Download presentation", key="download_presentation"):
+            download_presentation()
+
+# Function to handle the download button click
+def download_presentation():
+    presentation_path = st.session_state.get('presentation_path', 'new_presentation.pptx')
+    with open(presentation_path, "rb") as file:
+        btn = st.download_button(
+            label="Download presentation",
+            data=file,
+            file_name=presentation_path,
+            mime="application/vnd.openxmlformats-officedocument.presentationml.presentation"
+        )
+    return btn
 
 # Import functions from Functions.ipynb
 with Notebook():
@@ -118,6 +131,8 @@ def start_new_project():
     if 'current_step' not in st.session_state:
         st.session_state.current_step = 0
 
+    st.session_state.presentation_path = presentation_path
+
     if st.session_state.current_step == 0:
         if collect_user_inputs_new_project(presentation, presentation_path, shared_data):
             save_presentation(presentation, presentation_path)
@@ -136,6 +151,8 @@ def load_existing_project():
 
         if 'current_step' not in st.session_state:
             st.session_state.current_step = start_from
+
+        st.session_state.presentation_path = uploaded_file.name
 
         if collect_user_inputs(presentation, uploaded_file.name, shared_data, start_from=st.session_state.current_step):
             save_presentation(presentation, uploaded_file.name)
