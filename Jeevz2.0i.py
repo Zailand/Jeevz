@@ -125,13 +125,22 @@ with Notebook():
         tablet_disintegration_slide,
     )
 
+# Ensure shared data is loaded and stored in session state
+def ensure_shared_data(presentation, shared_data):
+    if 'shared_data' not in st.session_state:
+        st.session_state.shared_data = shared_data
+    else:
+        st.session_state.shared_data.update(shared_data)
+
 # Function to collect user inputs and store them temporarily for an existing project
 def collect_user_inputs(presentation, presentation_path, shared_data, start_from=1):
     slides_dict = st.session_state.get('slides_dict', {})
 
+    ensure_shared_data(presentation, shared_data)
+
     if start_from <= 1:
         st.write("Now working on the Hypothesis, Rationale & expected results slide")
-        hypothesis_rationale_expected_slide(presentation, presentation_path, shared_data)
+        hypothesis_rationale_expected_slide(presentation, presentation_path, st.session_state.shared_data)
         slides_dict['Hypothesis, Rationale & expected results'] = 'Added'
         st.session_state.slides_dict = slides_dict
         st.write(f"Slides added: {len(slides_dict)}")
@@ -146,7 +155,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
 
     if start_from <= 2:
         st.write("Now working on the Processing slide")
-        processing_slide(presentation, presentation_path, shared_data)
+        processing_slide(presentation, presentation_path, st.session_state.shared_data)
         slides_dict['Processing'] = 'Added'
         st.session_state.slides_dict = slides_dict
         st.write(f"Slides added: {len(slides_dict)}")
@@ -161,7 +170,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
 
     if start_from <= 3:
         st.write("Now working on the Compression conditions slide")
-        compression_conditions_slide(presentation, presentation_path, shared_data)
+        compression_conditions_slide(presentation, presentation_path, st.session_state.shared_data)
         slides_dict['Compression conditions'] = 'Added'
         st.session_state.slides_dict = slides_dict
         st.write(f"Slides added: {len(slides_dict)}")
@@ -176,7 +185,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
 
     if start_from <= 4:
         st.write("Now working on the Tablet disintegration slide")
-        tablet_disintegration_slide(presentation, presentation_path, shared_data)
+        tablet_disintegration_slide(presentation, presentation_path, st.session_state.shared_data)
         slides_dict['Tablet disintegration'] = 'Added'
         st.session_state.slides_dict = slides_dict
         st.write(f"Slides added: {len(slides_dict)}")
@@ -195,8 +204,10 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
 def collect_user_inputs_new_project(presentation, presentation_path, shared_data):
     slides_dict = st.session_state.get('slides_dict', {})
 
+    ensure_shared_data(presentation, shared_data)
+
     st.write("Now working on the Title Slide")
-    title_slide(presentation, presentation_path, shared_data)
+    title_slide(presentation, presentation_path, st.session_state.shared_data)
     slides_dict['Title Slide'] = 'Added'
     st.session_state.slides_dict = slides_dict
     st.write(f"Slides added: {len(slides_dict)}")
@@ -209,7 +220,7 @@ def collect_user_inputs_new_project(presentation, presentation_path, shared_data
     else:
         return False
 
-    if not collect_user_inputs(presentation, presentation_path, shared_data, start_from=1):
+    if not collect_user_inputs(presentation, presentation_path, st.session_state.shared_data, start_from=1):
         return False
 
     return True
@@ -240,6 +251,7 @@ def load_existing_project():
     if uploaded_file is not None:
         presentation = load_presentation(uploaded_file)
         shared_data = load_shared_data(presentation)
+        ensure_shared_data(presentation, shared_data)
         start_from = continue_from()
 
         if 'current_step' not in st.session_state:
@@ -247,7 +259,7 @@ def load_existing_project():
 
         st.session_state.presentation_path = uploaded_file.name
 
-        if collect_user_inputs(presentation, uploaded_file.name, shared_data, start_from=st.session_state.current_step):
+        if collect_user_inputs(presentation, uploaded_file.name, st.session_state.shared_data, start_from=st.session_state.current_step):
             save_presentation(presentation, uploaded_file.name)
 
 # Main function to ask the user if they want to start a new project or load an existing one
