@@ -51,8 +51,8 @@ def continue_prompt(step):
         return continue_button, download_button
 
 # Function to handle the download button click
-def download_presentation():
-    presentation_path = st.session_state.get('presentation_path', 'new_presentation.pptx')
+def download_presentation(presentation, presentation_path):
+    save_presentation(presentation, presentation_path)
     with open(presentation_path, "rb") as file:
         st.download_button(
             label="Download presentation",
@@ -94,7 +94,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
         if continue_button:
             st.session_state.current_step = 2
         elif download_button:
-            download_presentation()
+            download_presentation(presentation, presentation_path)
         else:
             return False
 
@@ -108,7 +108,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
         if continue_button:
             st.session_state.current_step = 3
         elif download_button:
-            download_presentation()
+            download_presentation(presentation, presentation_path)
         else:
             return False
 
@@ -122,7 +122,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
         if continue_button:
             st.session_state.current_step = 4
         elif download_button:
-            download_presentation()
+            download_presentation(presentation, presentation_path)
         else:
             return False
 
@@ -136,7 +136,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
         if continue_button:
             st.session_state.current_step = 5
         elif download_button:
-            download_presentation()
+            download_presentation(presentation, presentation_path)
         else:
             return False
 
@@ -153,7 +153,7 @@ def collect_user_inputs_new_project(presentation, presentation_path, shared_data
     if continue_button:
         st.session_state.current_step = 1
     elif download_button:
-        download_presentation()
+        download_presentation(presentation, presentation_path)
     else:
         return False
 
