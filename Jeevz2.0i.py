@@ -89,7 +89,7 @@ def collect_user_inputs(presentation, shared_data, start_from=1):
     if start_from <= 1:
         st.write("Now working on the Hypothesis, Rationale & expected results slide")
         if not is_slide_saved(1):
-            hypothesis_rationale_expected_slide(presentation, shared_data)
+            hypothesis_rationale_expected_slide(presentation, "temp.pptx", shared_data)
             mark_slide_as_saved(1)
         continue_button, download_button = continue_prompt(1)
         if continue_button:
@@ -102,7 +102,7 @@ def collect_user_inputs(presentation, shared_data, start_from=1):
     if start_from <= 2:
         st.write("Now working on the Processing slide")
         if not is_slide_saved(2):
-            processing_slide(presentation, shared_data)
+            processing_slide(presentation, "temp.pptx", shared_data)
             mark_slide_as_saved(2)
         continue_button, download_button = continue_prompt(2)
         if continue_button:
@@ -115,7 +115,7 @@ def collect_user_inputs(presentation, shared_data, start_from=1):
     if start_from <= 3:
         st.write("Now working on the Compression conditions slide")
         if not is_slide_saved(3):
-            compression_conditions_slide(presentation, shared_data)
+            compression_conditions_slide(presentation, "temp.pptx", shared_data)
             mark_slide_as_saved(3)
         continue_button, download_button = continue_prompt(3)
         if continue_button:
@@ -128,7 +128,7 @@ def collect_user_inputs(presentation, shared_data, start_from=1):
     if start_from <= 4:
         st.write("Now working on the Tablet disintegration slide")
         if not is_slide_saved(4):
-            tablet_disintegration_slide(presentation, shared_data)
+            tablet_disintegration_slide(presentation, "temp.pptx", shared_data)
             mark_slide_as_saved(4)
         continue_button, download_button = continue_prompt(4)
         if continue_button:
@@ -144,7 +144,7 @@ def collect_user_inputs(presentation, shared_data, start_from=1):
 def collect_user_inputs_new_project(presentation, shared_data):
     st.write("Now working on the Title Slide")
     if not is_slide_saved(0):
-        title_slide(presentation, shared_data)
+        title_slide(presentation, "temp.pptx", shared_data)
         mark_slide_as_saved(0)
     continue_button, download_button = continue_prompt(0)
     if continue_button:
