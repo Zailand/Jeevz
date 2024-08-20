@@ -4,7 +4,6 @@ import json
 from importnb import Notebook
 from pptx import Presentation
 import pandas as pd
-from io import BytesIO
 
 # Function to load an existing presentation
 def load_presentation(file):
@@ -32,40 +31,35 @@ def continue_from():
     )
     return ["Hypothesis, Rationale & expected results", "Processing", "Compression conditions", "Tablet disintegration"].index(choice) + 1
 
-# Function to handle the download presentation button
-def download_presentation(presentation, presentation_path, step):
-    # Save the presentation to a BytesIO object
-    output = BytesIO()
-    presentation.save(output)
-    output.seek(0)
-    
-    # Create a download button with a unique key
-    st.download_button(
-        label="Download presentation",
-        data=output,
-        file_name=presentation_path,
-        mime="application/vnd.openxmlformats-officedocument.presentationml.presentation",
-        key=f"download_presentation_{step}"
-    )
-
-def continue_prompt(step, presentation, presentation_path):
+# Function to prompt for continuation
+def continue_prompt(step):
     col1, col2, col3 = st.columns([1, 0.1, 1])
-    continue_button = None  # Initialize continue_button to None
     with col1:
         if step == 0:
-            continue_button = st.button("Continue to Hypothesis slide", key="continue_hypothesis")
+            return st.button("Continue to Hypothesis slide", key="continue_hypothesis")
         elif step == 1:
-            continue_button = st.button("Continue to Process slide", key="continue_process")
+            return st.button("Continue to Process slide", key="continue_process")
         elif step == 2:
-            continue_button = st.button("Continue to Compression conditions slide", key="continue_compression")
+            return st.button("Continue to Compression conditions slide", key="continue_compression")
         elif step == 3:
-            continue_button = st.button("Continue to Disintegration conditions slide", key="continue_disintegration")
+            return st.button("Continue to Disintegration conditions slide", key="continue_disintegration")
     with col2:
         st.write("or")
     with col3:
-        download_presentation(presentation, presentation_path, step)
-    
-    return continue_button
+        if st.button("Download presentation", key="download_presentation"):
+            download_presentation()
+
+# Function to handle the download button click
+def download_presentation():
+    presentation_path = st.session_state.get('presentation_path', 'new_presentation.pptx')
+    with open(presentation_path, "rb") as file:
+        btn = st.download_button(
+            label="Download presentation",
+            data=file,
+            file_name=presentation_path,
+            mime="application/vnd.openxmlformats-officedocument.presentationml.presentation"
+        )
+    return btn
 
 # Import functions from Functions.ipynb
 with Notebook():
@@ -77,132 +71,74 @@ with Notebook():
         tablet_disintegration_slide,
     )
 
-# Function to save the presentation
-def save_presentation(presentation, presentation_path):
-    presentation.save(presentation_path)
-    st.success(f"Presentation saved as {presentation_path}")
-
-# Function to check if a slide with specific content already exists
-def slide_exists(presentation, slide_title):
-    for slide in presentation.slides:
-        for shape in slide.shapes:
-            if shape.has_text_frame:
-                if slide_title in shape.text:
-                    return True
-    return False
-
-# Function to collect user inputs for each step
-def collect_inputs(step, presentation, presentation_path, shared_data):
-    if step == 1:
-        st.write("Now working on the Hypothesis, Rationale & expected results slide")
-        if not slide_exists(presentation, "Hypothesis, Rationale & expected results"):
-            hypothesis_rationale_expected_slide(presentation, presentation_path, shared_data)
-        st.write(f"Number of slides after Hypothesis slide: {len(presentation.slides)}")
-
-    elif step == 2:
-        st.write("Now working on the Processing slide")
-        if not slide_exists(presentation, "Processing"):
-            processing_slide(presentation, presentation_path, shared_data)
-        st.write(f"Number of slides after Processing slide: {len(presentation.slides)}")
-
-    elif step == 3:
-        st.write("Now working on the Compression conditions slide")
-        if not slide_exists(presentation, "Compression conditions"):
-            compression_conditions_slide(presentation, presentation_path, shared_data)
-        st.write(f"Number of slides after Compression conditions slide: {len(presentation.slides)}")
-
-    elif step == 4:
-        st.write("Now working on the Tablet disintegration slide")
-        if not slide_exists(presentation, "Tablet disintegration"):
-            tablet_disintegration_slide(presentation, presentation_path, shared_data)
-        st.write(f"Number of slides after Tablet disintegration slide: {len(presentation.slides)}")
-        download_presentation(presentation, presentation_path, 4) 
-
-# Function to handle user interactions and manage steps
-def handle_interactions(presentation, presentation_path, shared_data):
-    step = st.session_state.get("current_step", 1)
-    collect_inputs(step, presentation, presentation_path, shared_data)
-    if step < 4:
-        if continue_prompt(step, presentation, presentation_path):
-            save_presentation(presentation, presentation_path)
-            st.session_state.current_step = step + 1
-
 # Function to collect user inputs and store them temporarily for an existing project
 def collect_user_inputs(presentation, presentation_path, shared_data, start_from=1):
     if start_from <= 1:
         st.write("Now working on the Hypothesis, Rationale & expected results slide")
-        if not slide_exists(presentation, "Hypothesis, Rationale & expected results"):
-            hypothesis_rationale_expected_slide(presentation, presentation_path, shared_data)
-        st.write(f"Number of slides after Hypothesis slide: {len(presentation.slides)}")
-        if continue_prompt(1, presentation, presentation_path):
-            save_presentation(presentation, presentation_path)
+        hypothesis_rationale_expected_slide(presentation, presentation_path, shared_data)
+        if continue_prompt(1):
             st.session_state.current_step = 2
-            return False  # Prevent premature return
+        else:
+            return False
 
     if start_from <= 2:
         st.write("Now working on the Processing slide")
-        if not slide_exists(presentation, "Processing"):
-            processing_slide(presentation, presentation_path, shared_data)
-        st.write(f"Number of slides after Processing slide: {len(presentation.slides)}")
-        if continue_prompt(2, presentation, presentation_path):
-            save_presentation(presentation, presentation_path)
+        processing_slide(presentation, presentation_path, shared_data)
+        if continue_prompt(2):
             st.session_state.current_step = 3
-            return False  # Prevent premature return
+        else:
+            return False
 
     if start_from <= 3:
         st.write("Now working on the Compression conditions slide")
-        if not slide_exists(presentation, "Compression conditions"):
-            compression_conditions_slide(presentation, presentation_path, shared_data)
-        st.write(f"Number of slides after Compression conditions slide: {len(presentation.slides)}")
-        if continue_prompt(3, presentation, presentation_path):
-            save_presentation(presentation, presentation_path)
+        compression_conditions_slide(presentation, presentation_path, shared_data)
+        if continue_prompt(3):
             st.session_state.current_step = 4
-            return False  # Prevent premature return
+        else:
+            return False
 
     if start_from <= 4:
         st.write("Now working on the Tablet disintegration slide")
         tablet_disintegration_slide(presentation, presentation_path, shared_data)
-        st.write(f"Number of slides after Tablet disintegration slide: {len(presentation.slides)}")
-        download_presentation(presentation, presentation_path, 4)  # Always show the download button for step 4
+        if continue_prompt(4):
+            st.session_state.current_step = 5
+        else:
+            return False
 
     return True
 
 # Function to collect user inputs and store them temporarily for a new project
 def collect_user_inputs_new_project(presentation, presentation_path, shared_data):
     st.write("Now working on the Title Slide")
-    if not slide_exists(presentation, "Formulation Slides"):
-        title_slide(presentation, presentation_path, shared_data)
-        save_presentation(presentation, presentation_path)  # Save the presentation after adding the title slide
-    if continue_prompt(0, presentation, presentation_path):
+    title_slide(presentation, presentation_path, shared_data)
+    if continue_prompt(0):
         st.session_state.current_step = 1
-        return False  # Prevent premature return
-    handle_interactions(presentation, presentation_path, shared_data)
-    return True
+    else:
+        return False
 
-def handle_interactions(presentation, presentation_path, shared_data):
-    step = st.session_state.get("current_step", 1)
-    collect_inputs(step, presentation, presentation_path, shared_data)
-    if step < 4:
-        if continue_prompt(step, presentation, presentation_path):
-            save_presentation(presentation, presentation_path)
-            st.session_state.current_step = step + 1
+    if not collect_user_inputs(presentation, presentation_path, shared_data, start_from=1):
+        return False
+
+    return True
 
 # Function to start a new project
 def start_new_project():
     st.write("Starting a new project...")
     presentation_path = st.text_input("Enter the path to save the new presentation:", "new_presentation.pptx")
-    if 'presentation' not in st.session_state:
-        st.session_state.presentation = Presentation()
-    presentation = st.session_state.presentation
+    presentation = Presentation()
     shared_data = {}
 
     if 'current_step' not in st.session_state:
         st.session_state.current_step = 0
 
+    st.session_state.presentation_path = presentation_path
+
     if st.session_state.current_step == 0:
-        collect_user_inputs_new_project(presentation, presentation_path, shared_data)
+        if collect_user_inputs_new_project(presentation, presentation_path, shared_data):
+            save_presentation(presentation, presentation_path)
     else:
-        collect_user_inputs(presentation, presentation_path, shared_data, start_from=st.session_state.current_step)
+        if collect_user_inputs(presentation, presentation_path, shared_data, start_from=st.session_state.current_step):
+            save_presentation(presentation, presentation_path)
 
 # Function to load an existing project
 def load_existing_project():
@@ -216,7 +152,10 @@ def load_existing_project():
         if 'current_step' not in st.session_state:
             st.session_state.current_step = start_from
 
-        collect_user_inputs(presentation, uploaded_file.name, shared_data, start_from=st.session_state.current_step)
+        st.session_state.presentation_path = uploaded_file.name
+
+        if collect_user_inputs(presentation, uploaded_file.name, shared_data, start_from=st.session_state.current_step):
+            save_presentation(presentation, uploaded_file.name)
 
 # Main function to ask the user if they want to start a new project or load an existing one
 def main():
