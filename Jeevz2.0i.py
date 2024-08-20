@@ -60,12 +60,9 @@ with Notebook():
 
 # Function to collect user inputs and store them temporarily for an existing project
 def collect_user_inputs(presentation, presentation_path, shared_data, start_from=1):
-    slides_dict = {}
     if start_from <= 1:
         st.write("Now working on the Hypothesis, Rationale & expected results slide")
         hypothesis_rationale_expected_slide(presentation, presentation_path, shared_data)
-        slides_dict['Hypothesis, Rationale & expected results'] = 'hypothesis_rationale_expected_slide'
-        st.write(f"Slides saved: {len(slides_dict)}")
         if continue_prompt(1):
             st.session_state.current_step = 2
         else:
@@ -74,8 +71,6 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
     if start_from <= 2:
         st.write("Now working on the Processing slide")
         processing_slide(presentation, presentation_path, shared_data)
-        slides_dict['Processing'] = 'processing_slide'
-        st.write(f"Slides saved: {len(slides_dict)}")
         if continue_prompt(2):
             st.session_state.current_step = 3
         else:
@@ -84,8 +79,6 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
     if start_from <= 3:
         st.write("Now working on the Compression conditions slide")
         compression_conditions_slide(presentation, presentation_path, shared_data)
-        slides_dict['Compression conditions'] = 'compression_conditions_slide'
-        st.write(f"Slides saved: {len(slides_dict)}")
         if continue_prompt(3):
             st.session_state.current_step = 4
         else:
@@ -94,8 +87,6 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
     if start_from <= 4:
         st.write("Now working on the Tablet disintegration slide")
         tablet_disintegration_slide(presentation, presentation_path, shared_data)
-        slides_dict['Tablet disintegration'] = 'tablet_disintegration_slide'
-        st.write(f"Slides saved: {len(slides_dict)}")
         if continue_prompt(4):
             st.session_state.current_step = 5
         else:
@@ -105,11 +96,8 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
 
 # Function to collect user inputs and store them temporarily for a new project
 def collect_user_inputs_new_project(presentation, presentation_path, shared_data):
-    slides_dict = {}
     st.write("Now working on the Title Slide")
     title_slide(presentation, presentation_path, shared_data)
-    slides_dict['Title'] = 'title_slide'
-    st.write(f"Slides saved: {len(slides_dict)}")
     if continue_prompt(0):
         st.session_state.current_step = 1
     else:
