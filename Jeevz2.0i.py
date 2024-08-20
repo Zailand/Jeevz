@@ -4,7 +4,6 @@ import json
 from importnb import Notebook
 from pptx import Presentation
 import pandas as pd
-import tempfile
 
 # Function to load an existing presentation
 def load_presentation(file):
@@ -52,17 +51,16 @@ def continue_prompt(step):
         return continue_button, download_button
 
 # Function to handle the download button click
-def download_presentation(presentation):
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".pptx") as tmp:
-        presentation.save(tmp.name)
-        with open(tmp.name, "rb") as file:
-            st.download_button(
-                label="Download presentation",
-                data=file,
-                file_name="presentation.pptx",
-                mime="application/vnd.openxmlformats-officedocument.presentationml.presentation",
-                key="download_button"
-            )
+def download_presentation():
+    presentation_path = st.session_state.get('presentation_path', 'new_presentation.pptx')
+    with open(presentation_path, "rb") as file:
+        st.download_button(
+            label="Download presentation",
+            data=file,
+            file_name=presentation_path,
+            mime="application/vnd.openxmlformats-officedocument.presentationml.presentation",
+            key="download_button"
+        )
 
 # Function to check if a slide has been saved
 def is_slide_saved(step):
@@ -85,76 +83,81 @@ with Notebook():
     )
 
 # Function to collect user inputs and store them temporarily for an existing project
-def collect_user_inputs(presentation, shared_data, start_from=1):
+def collect_user_inputs(presentation, presentation_path, shared_data, start_from=1):
     if start_from <= 1:
         st.write("Now working on the Hypothesis, Rationale & expected results slide")
         if not is_slide_saved(1):
-            hypothesis_rationale_expected_slide(presentation, "temp.pptx", shared_data)
+            hypothesis_rationale_expected_slide(presentation, presentation_path, shared_data)
             mark_slide_as_saved(1)
+            save_presentation(presentation, presentation_path)
         continue_button, download_button = continue_prompt(1)
         if continue_button:
             st.session_state.current_step = 2
         elif download_button:
-            download_presentation(presentation)
+            download_presentation()
         else:
             return False
 
     if start_from <= 2:
         st.write("Now working on the Processing slide")
         if not is_slide_saved(2):
-            processing_slide(presentation, "temp.pptx", shared_data)
+            processing_slide(presentation, presentation_path, shared_data)
             mark_slide_as_saved(2)
+            save_presentation(presentation, presentation_path)
         continue_button, download_button = continue_prompt(2)
         if continue_button:
             st.session_state.current_step = 3
         elif download_button:
-            download_presentation(presentation)
+            download_presentation()
         else:
             return False
 
     if start_from <= 3:
         st.write("Now working on the Compression conditions slide")
         if not is_slide_saved(3):
-            compression_conditions_slide(presentation, "temp.pptx", shared_data)
+            compression_conditions_slide(presentation, presentation_path, shared_data)
             mark_slide_as_saved(3)
+            save_presentation(presentation, presentation_path)
         continue_button, download_button = continue_prompt(3)
         if continue_button:
             st.session_state.current_step = 4
         elif download_button:
-            download_presentation(presentation)
+            download_presentation()
         else:
             return False
 
     if start_from <= 4:
         st.write("Now working on the Tablet disintegration slide")
         if not is_slide_saved(4):
-            tablet_disintegration_slide(presentation, "temp.pptx", shared_data)
+            tablet_disintegration_slide(presentation, presentation_path, shared_data)
             mark_slide_as_saved(4)
+            save_presentation(presentation, presentation_path)
         continue_button, download_button = continue_prompt(4)
         if continue_button:
             st.session_state.current_step = 5
         elif download_button:
-            download_presentation(presentation)
+            download_presentation()
         else:
             return False
 
     return True
 
 # Function to collect user inputs and store them temporarily for a new project
-def collect_user_inputs_new_project(presentation, shared_data):
+def collect_user_inputs_new_project(presentation, presentation_path, shared_data):
     st.write("Now working on the Title Slide")
     if not is_slide_saved(0):
-        title_slide(presentation, "temp.pptx", shared_data)
+        title_slide(presentation, presentation_path, shared_data)
         mark_slide_as_saved(0)
+        save_presentation(presentation, presentation_path)
     continue_button, download_button = continue_prompt(0)
     if continue_button:
         st.session_state.current_step = 1
     elif download_button:
-        download_presentation(presentation)
+        download_presentation()
     else:
         return False
 
-    if not collect_user_inputs(presentation, shared_data, start_from=1):
+    if not collect_user_inputs(presentation, presentation_path, shared_data, start_from=1):
         return False
 
     return True
@@ -162,18 +165,21 @@ def collect_user_inputs_new_project(presentation, shared_data):
 # Function to start a new project
 def start_new_project():
     st.write("Starting a new project...")
+    presentation_path = st.text_input("Enter the path to save the new presentation:", "new_presentation.pptx")
     presentation = Presentation()
     shared_data = {}
 
     if 'current_step' not in st.session_state:
         st.session_state.current_step = 0
 
+    st.session_state.presentation_path = presentation_path
+
     if st.session_state.current_step == 0:
-        if collect_user_inputs_new_project(presentation, shared_data):
-            pass
+        if collect_user_inputs_new_project(presentation, presentation_path, shared_data):
+            save_presentation(presentation, presentation_path)
     else:
-        if collect_user_inputs(presentation, shared_data, start_from=st.session_state.current_step):
-            pass
+        if collect_user_inputs(presentation, presentation_path, shared_data, start_from=st.session_state.current_step):
+            save_presentation(presentation, presentation_path)
 
 # Function to load an existing project
 def load_existing_project():
@@ -187,8 +193,15 @@ def load_existing_project():
         if 'current_step' not in st.session_state:
             st.session_state.current_step = start_from
 
-        if collect_user_inputs(presentation, shared_data, start_from=st.session_state.current_step):
-            pass
+        st.session_state.presentation_path = uploaded_file.name
+
+        if collect_user_inputs(presentation, uploaded_file.name, shared_data, start_from=st.session_state.current_step):
+            save_presentation(presentation, uploaded_file.name)
+
+# Function to save the presentation
+def save_presentation(presentation, presentation_path):
+    presentation.save(presentation_path)
+    st.success(f"Presentation saved as {presentation_path}")
 
 # Main function to ask the user if they want to start a new project or load an existing one
 def main():
