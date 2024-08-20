@@ -116,7 +116,7 @@ def collect_inputs(step, presentation, presentation_path, shared_data):
         if not slide_exists(presentation, "Tablet disintegration"):
             tablet_disintegration_slide(presentation, presentation_path, shared_data)
         st.write(f"Number of slides after Tablet disintegration slide: {len(presentation.slides)}")
-        download_presentation(presentation, presentation_path, 4)  # Always show the download button for step 4
+        download_presentation(presentation, presentation_path, 4) 
 
 # Function to handle user interactions and manage steps
 def handle_interactions(presentation, presentation_path, shared_data):
