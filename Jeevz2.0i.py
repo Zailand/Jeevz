@@ -129,8 +129,43 @@ def handle_interactions(presentation, presentation_path, shared_data):
 
 # Function to collect user inputs and store them temporarily for an existing project
 def collect_user_inputs(presentation, presentation_path, shared_data, start_from=1):
-    st.session_state.current_step = start_from
-    handle_interactions(presentation, presentation_path, shared_data)
+    if start_from <= 1:
+        st.write("Now working on the Hypothesis, Rationale & expected results slide")
+        if not slide_exists(presentation, "Hypothesis, Rationale & expected results"):
+            hypothesis_rationale_expected_slide(presentation, presentation_path, shared_data)
+        st.write(f"Number of slides after Hypothesis slide: {len(presentation.slides)}")
+        if continue_prompt(1, presentation, presentation_path):
+            save_presentation(presentation, presentation_path)
+            st.session_state.current_step = 2
+            return False  # Prevent premature return
+
+    if start_from <= 2:
+        st.write("Now working on the Processing slide")
+        if not slide_exists(presentation, "Processing"):
+            processing_slide(presentation, presentation_path, shared_data)
+        st.write(f"Number of slides after Processing slide: {len(presentation.slides)}")
+        if continue_prompt(2, presentation, presentation_path):
+            save_presentation(presentation, presentation_path)
+            st.session_state.current_step = 3
+            return False  # Prevent premature return
+
+    if start_from <= 3:
+        st.write("Now working on the Compression conditions slide")
+        if not slide_exists(presentation, "Compression conditions"):
+            compression_conditions_slide(presentation, presentation_path, shared_data)
+        st.write(f"Number of slides after Compression conditions slide: {len(presentation.slides)}")
+        if continue_prompt(3, presentation, presentation_path):
+            save_presentation(presentation, presentation_path)
+            st.session_state.current_step = 4
+            return False  # Prevent premature return
+
+    if start_from <= 4:
+        st.write("Now working on the Tablet disintegration slide")
+        tablet_disintegration_slide(presentation, presentation_path, shared_data)
+        st.write(f"Number of slides after Tablet disintegration slide: {len(presentation.slides)}")
+        download_presentation(presentation, presentation_path, 4)  # Always show the download button for step 4
+
+    return True
 
 # Function to collect user inputs and store them temporarily for a new project
 def collect_user_inputs_new_project(presentation, presentation_path, shared_data):
@@ -140,7 +175,17 @@ def collect_user_inputs_new_project(presentation, presentation_path, shared_data
         save_presentation(presentation, presentation_path)  # Save the presentation after adding the title slide
     if continue_prompt(0, presentation, presentation_path):
         st.session_state.current_step = 1
+        return False  # Prevent premature return
     handle_interactions(presentation, presentation_path, shared_data)
+    return True
+
+def handle_interactions(presentation, presentation_path, shared_data):
+    step = st.session_state.get("current_step", 1)
+    collect_inputs(step, presentation, presentation_path, shared_data)
+    if step < 4:
+        if continue_prompt(step, presentation, presentation_path):
+            save_presentation(presentation, presentation_path)
+            st.session_state.current_step = step + 1
 
 # Function to start a new project
 def start_new_project():
