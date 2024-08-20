@@ -33,33 +33,35 @@ def continue_from():
 
 # Function to prompt for continuation
 def continue_prompt(step):
-    col1, col2, col3 = st.columns([1, 0.1, 1])
-    with col1:
-        if step == 0:
-            return st.button("Continue to Hypothesis slide", key="continue_hypothesis")
-        elif step == 1:
-            return st.button("Continue to Process slide", key="continue_process")
-        elif step == 2:
-            return st.button("Continue to Compression conditions slide", key="continue_compression")
-        elif step == 3:
-            return st.button("Continue to Disintegration conditions slide", key="continue_disintegration")
-    with col2:
-        st.write("or")
-    with col3:
-        if st.button("Download presentation", key="download_presentation"):
-            download_presentation()
+    with st.form(key=f"form_{step}"):
+        col1, col2, col3 = st.columns([1, 0.1, 1])
+        with col1:
+            if step == 0:
+                continue_button = st.form_submit_button("Continue to Hypothesis slide", key="continue_hypothesis")
+            elif step == 1:
+                continue_button = st.form_submit_button("Continue to Process slide", key="continue_process")
+            elif step == 2:
+                continue_button = st.form_submit_button("Continue to Compression conditions slide", key="continue_compression")
+            elif step == 3:
+                continue_button = st.form_submit_button("Continue to Disintegration conditions slide", key="continue_disintegration")
+        with col2:
+            st.write("or")
+        with col3:
+            if st.form_submit_button("Download presentation", key=f"download_presentation_{step}"):
+                download_presentation()
+        return continue_button
 
 # Function to handle the download button click
 def download_presentation():
     presentation_path = st.session_state.get('presentation_path', 'new_presentation.pptx')
     with open(presentation_path, "rb") as file:
-        btn = st.download_button(
+        st.download_button(
             label="Download presentation",
             data=file,
             file_name=presentation_path,
-            mime="application/vnd.openxmlformats-officedocument.presentationml.presentation"
+            mime="application/vnd.openxmlformats-officedocument.presentationml.presentation",
+            key="download_button"
         )
-    return btn
 
 # Import functions from Functions.ipynb
 with Notebook():
