@@ -151,7 +151,7 @@ def collect_user_inputs_new_project(presentation, presentation_path, shared_data
         return False
 
     return True
-
+    
 # Function to start a new project
 def start_new_project():
     st.write("Starting a new project...")
