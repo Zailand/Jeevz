@@ -97,6 +97,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
         slides_dict['Hypothesis, Rationale & expected results'] = 'Added'
         st.session_state.slides_dict = slides_dict
         st.write(f"Slides added: {len(slides_dict)}")
+        presentation.save(presentation_path)  # Save the presentation after adding the slide
         continue_button, download_button = continue_prompt(1)
         if download_button:
             download_presentation()
@@ -111,6 +112,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
         slides_dict['Processing'] = 'Added'
         st.session_state.slides_dict = slides_dict
         st.write(f"Slides added: {len(slides_dict)}")
+        presentation.save(presentation_path)  # Save the presentation after adding the slide
         continue_button, download_button = continue_prompt(2)
         if download_button:
             download_presentation()
@@ -125,6 +127,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
         slides_dict['Compression conditions'] = 'Added'
         st.session_state.slides_dict = slides_dict
         st.write(f"Slides added: {len(slides_dict)}")
+        presentation.save(presentation_path)  # Save the presentation after adding the slide
         continue_button, download_button = continue_prompt(3)
         if download_button:
             download_presentation()
@@ -139,6 +142,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
         slides_dict['Tablet disintegration'] = 'Added'
         st.session_state.slides_dict = slides_dict
         st.write(f"Slides added: {len(slides_dict)}")
+        presentation.save(presentation_path)  # Save the presentation after adding the slide
         continue_button, download_button = continue_prompt(4)
         if download_button:
             download_presentation()
@@ -158,6 +162,7 @@ def collect_user_inputs_new_project(presentation, presentation_path, shared_data
     slides_dict['Title Slide'] = 'Added'
     st.session_state.slides_dict = slides_dict
     st.write(f"Slides added: {len(slides_dict)}")
+    presentation.save(presentation_path)  # Save the presentation after adding the slide
     continue_button, download_button = continue_prompt(0)
     if download_button:
         download_presentation()
