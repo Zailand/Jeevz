@@ -62,6 +62,13 @@ def download_presentation():
             key="download_button"
         )
 
+# Function to check if a slide already exists
+def slide_exists(presentation, slide_title):
+    for slide in presentation.slides:
+        if slide.shapes.title and slide.shapes.title.text == slide_title:
+            return True
+    return False
+
 # Import functions from Functions.ipynb
 with Notebook():
     from Functions import (
@@ -76,7 +83,8 @@ with Notebook():
 def collect_user_inputs(presentation, presentation_path, shared_data, start_from=1):
     if start_from <= 1:
         st.write("Now working on the Hypothesis, Rationale & expected results slide")
-        hypothesis_rationale_expected_slide(presentation, presentation_path, shared_data)
+        if not slide_exists(presentation, "Hypothesis, Rationale & expected results"):
+            hypothesis_rationale_expected_slide(presentation, presentation_path, shared_data)
         continue_button, download_button = continue_prompt(1)
         if continue_button:
             st.session_state.current_step = 2
@@ -87,7 +95,8 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
 
     if start_from <= 2:
         st.write("Now working on the Processing slide")
-        processing_slide(presentation, presentation_path, shared_data)
+        if not slide_exists(presentation, "Processing"):
+            processing_slide(presentation, presentation_path, shared_data)
         continue_button, download_button = continue_prompt(2)
         if continue_button:
             st.session_state.current_step = 3
@@ -98,7 +107,8 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
 
     if start_from <= 3:
         st.write("Now working on the Compression conditions slide")
-        compression_conditions_slide(presentation, presentation_path, shared_data)
+        if not slide_exists(presentation, "Compression conditions"):
+            compression_conditions_slide(presentation, presentation_path, shared_data)
         continue_button, download_button = continue_prompt(3)
         if continue_button:
             st.session_state.current_step = 4
@@ -109,7 +119,8 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
 
     if start_from <= 4:
         st.write("Now working on the Tablet disintegration slide")
-        tablet_disintegration_slide(presentation, presentation_path, shared_data)
+        if not slide_exists(presentation, "Tablet disintegration"):
+            tablet_disintegration_slide(presentation, presentation_path, shared_data)
         continue_button, download_button = continue_prompt(4)
         if continue_button:
             st.session_state.current_step = 5
@@ -123,7 +134,8 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
 # Function to collect user inputs and store them temporarily for a new project
 def collect_user_inputs_new_project(presentation, presentation_path, shared_data):
     st.write("Now working on the Title Slide")
-    title_slide(presentation, presentation_path, shared_data)
+    if not slide_exists(presentation, "Formulation Slides"):
+        title_slide(presentation, presentation_path, shared_data)
     continue_button, download_button = continue_prompt(0)
     if continue_button:
         st.session_state.current_step = 1
