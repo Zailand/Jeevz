@@ -48,7 +48,7 @@ def continue_prompt(step):
     with col3:
         return st.button("Download presentation", key="download_presentation")
 
-def save_presentation(presentation):
+def save_presentation(presentation, presentation_path):
     new_presentation_path = f"new_presentation_step.pptx"
     presentation.save(new_presentation_path)
     return new_presentation_path
