@@ -9,6 +9,13 @@ import pandas as pd
 # Configure logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
+def save_presentation(presentation, step):
+    presentation_path = st.session_state.get('presentation_path', 'new_presentation.pptx')
+    new_presentation_path = f"new_presentation_step_{step}.pptx"
+    presentation.save(new_presentation_path)
+    logging.debug(f"Saved presentation after step {step}: {new_presentation_path}")
+    return new_presentation_path
+
 # Function to load an existing presentation
 def load_presentation(file):
     presentation = Presentation(file)
