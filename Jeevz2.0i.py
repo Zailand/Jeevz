@@ -58,7 +58,8 @@ def download_presentation():
             label="Download presentation",
             data=file,
             file_name=presentation_path,
-            mime="application/vnd.openxmlformats-officedocument.presentationml.presentation"
+            mime="application/vnd.openxmlformats-officedocument.presentationml.presentation",
+            key="download_button"
         )
 
 # Function to check if a slide has been saved
@@ -93,7 +94,6 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
         if continue_button:
             st.session_state.current_step = 2
         elif download_button:
-            save_presentation(presentation, presentation_path)
             download_presentation()
         else:
             return False
@@ -108,7 +108,6 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
         if continue_button:
             st.session_state.current_step = 3
         elif download_button:
-            save_presentation(presentation, presentation_path)
             download_presentation()
         else:
             return False
@@ -123,7 +122,6 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
         if continue_button:
             st.session_state.current_step = 4
         elif download_button:
-            save_presentation(presentation, presentation_path)
             download_presentation()
         else:
             return False
@@ -138,7 +136,6 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
         if continue_button:
             st.session_state.current_step = 5
         elif download_button:
-            save_presentation(presentation, presentation_path)
             download_presentation()
         else:
             return False
@@ -156,7 +153,6 @@ def collect_user_inputs_new_project(presentation, presentation_path, shared_data
     if continue_button:
         st.session_state.current_step = 1
     elif download_button:
-        save_presentation(presentation, presentation_path)
         download_presentation()
     else:
         return False
