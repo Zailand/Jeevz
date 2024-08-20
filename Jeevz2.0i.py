@@ -66,7 +66,7 @@ def continue_prompt(step, presentation, presentation_path):
         download_presentation(presentation, presentation_path, step)
     
     return continue_button
-    
+
 # Import functions from Functions.ipynb
 with Notebook():
     from Functions import (
@@ -91,50 +91,46 @@ def slide_exists(presentation, slide_title):
                     return True
     return False
 
-# Function to collect user inputs and store them temporarily for an existing project
-def collect_user_inputs(presentation, presentation_path, shared_data, start_from=1):
-    if start_from <= 1:
+# Function to collect user inputs for each step
+def collect_inputs(step, presentation, presentation_path, shared_data):
+    if step == 1:
         st.write("Now working on the Hypothesis, Rationale & expected results slide")
         if not slide_exists(presentation, "Hypothesis, Rationale & expected results"):
             hypothesis_rationale_expected_slide(presentation, presentation_path, shared_data)
         st.write(f"Number of slides after Hypothesis slide: {len(presentation.slides)}")
-        if continue_prompt(1, presentation, presentation_path):
-            save_presentation(presentation, presentation_path)
-            st.session_state.current_step = 2
-        else:
-            return False
 
-    if start_from <= 2:
+    elif step == 2:
         st.write("Now working on the Processing slide")
         if not slide_exists(presentation, "Processing"):
             processing_slide(presentation, presentation_path, shared_data)
         st.write(f"Number of slides after Processing slide: {len(presentation.slides)}")
-        if continue_prompt(2, presentation, presentation_path):
-            save_presentation(presentation, presentation_path)
-            st.session_state.current_step = 3
-        else:
-            return False
 
-    if start_from <= 3:
+    elif step == 3:
         st.write("Now working on the Compression conditions slide")
         if not slide_exists(presentation, "Compression conditions"):
             compression_conditions_slide(presentation, presentation_path, shared_data)
         st.write(f"Number of slides after Compression conditions slide: {len(presentation.slides)}")
-        if continue_prompt(3, presentation, presentation_path):
-            save_presentation(presentation, presentation_path)
-            st.session_state.current_step = 4
-        else:
-            return False
 
-    if start_from <= 4:
+    elif step == 4:
         st.write("Now working on the Tablet disintegration slide")
         if not slide_exists(presentation, "Tablet disintegration"):
             tablet_disintegration_slide(presentation, presentation_path, shared_data)
         st.write(f"Number of slides after Tablet disintegration slide: {len(presentation.slides)}")
         download_presentation(presentation, presentation_path, 4)  # Always show the download button for step 4
-        return True  # Ensure the function does not return prematurely
 
-    return True
+# Function to handle user interactions and manage steps
+def handle_interactions(presentation, presentation_path, shared_data):
+    step = st.session_state.get("current_step", 1)
+    collect_inputs(step, presentation, presentation_path, shared_data)
+    if step < 4:
+        if continue_prompt(step, presentation, presentation_path):
+            save_presentation(presentation, presentation_path)
+            st.session_state.current_step = step + 1
+
+# Function to collect user inputs and store them temporarily for an existing project
+def collect_user_inputs(presentation, presentation_path, shared_data, start_from=1):
+    st.session_state.current_step = start_from
+    handle_interactions(presentation, presentation_path, shared_data)
 
 # Function to collect user inputs and store them temporarily for a new project
 def collect_user_inputs_new_project(presentation, presentation_path, shared_data):
@@ -144,14 +140,8 @@ def collect_user_inputs_new_project(presentation, presentation_path, shared_data
         save_presentation(presentation, presentation_path)  # Save the presentation after adding the title slide
     if continue_prompt(0, presentation, presentation_path):
         st.session_state.current_step = 1
-    else:
-        return False
+    handle_interactions(presentation, presentation_path, shared_data)
 
-    if not collect_user_inputs(presentation, presentation_path, shared_data, start_from=1):
-        return False
-
-    return True
-    
 # Function to start a new project
 def start_new_project():
     st.write("Starting a new project...")
@@ -165,11 +155,9 @@ def start_new_project():
         st.session_state.current_step = 0
 
     if st.session_state.current_step == 0:
-        if collect_user_inputs_new_project(presentation, presentation_path, shared_data):
-            save_presentation(presentation, presentation_path)
+        collect_user_inputs_new_project(presentation, presentation_path, shared_data)
     else:
-        if collect_user_inputs(presentation, presentation_path, shared_data, start_from=st.session_state.current_step):
-            save_presentation(presentation, presentation_path)
+        collect_user_inputs(presentation, presentation_path, shared_data, start_from=st.session_state.current_step)
 
 # Function to load an existing project
 def load_existing_project():
@@ -183,8 +171,7 @@ def load_existing_project():
         if 'current_step' not in st.session_state:
             st.session_state.current_step = start_from
 
-        if collect_user_inputs(presentation, uploaded_file.name, shared_data, start_from=st.session_state.current_step):
-            save_presentation(presentation, uploaded_file.name)
+        collect_user_inputs(presentation, uploaded_file.name, shared_data, start_from=st.session_state.current_step)
 
 # Main function to ask the user if they want to start a new project or load an existing one
 def main():
