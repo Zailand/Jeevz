@@ -89,6 +89,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
         if not is_slide_saved(1):
             hypothesis_rationale_expected_slide(presentation, presentation_path, shared_data)
             mark_slide_as_saved(1)
+            save_presentation(presentation, presentation_path)
         continue_button, download_button = continue_prompt(1)
         if continue_button:
             st.session_state.current_step = 2
@@ -102,6 +103,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
         if not is_slide_saved(2):
             processing_slide(presentation, presentation_path, shared_data)
             mark_slide_as_saved(2)
+            save_presentation(presentation, presentation_path)
         continue_button, download_button = continue_prompt(2)
         if continue_button:
             st.session_state.current_step = 3
@@ -115,6 +117,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
         if not is_slide_saved(3):
             compression_conditions_slide(presentation, presentation_path, shared_data)
             mark_slide_as_saved(3)
+            save_presentation(presentation, presentation_path)
         continue_button, download_button = continue_prompt(3)
         if continue_button:
             st.session_state.current_step = 4
@@ -128,6 +131,7 @@ def collect_user_inputs(presentation, presentation_path, shared_data, start_from
         if not is_slide_saved(4):
             tablet_disintegration_slide(presentation, presentation_path, shared_data)
             mark_slide_as_saved(4)
+            save_presentation(presentation, presentation_path)
         continue_button, download_button = continue_prompt(4)
         if continue_button:
             st.session_state.current_step = 5
@@ -144,6 +148,7 @@ def collect_user_inputs_new_project(presentation, presentation_path, shared_data
     if not is_slide_saved(0):
         title_slide(presentation, presentation_path, shared_data)
         mark_slide_as_saved(0)
+        save_presentation(presentation, presentation_path)
     continue_button, download_button = continue_prompt(0)
     if continue_button:
         st.session_state.current_step = 1
@@ -192,6 +197,11 @@ def load_existing_project():
 
         if collect_user_inputs(presentation, uploaded_file.name, shared_data, start_from=st.session_state.current_step):
             save_presentation(presentation, uploaded_file.name)
+
+# Function to save the presentation
+def save_presentation(presentation, presentation_path):
+    presentation.save(presentation_path)
+    st.success(f"Presentation saved as {presentation_path}")
 
 # Main function to ask the user if they want to start a new project or load an existing one
 def main():
