@@ -37,17 +37,17 @@ def continue_prompt(step):
         col1, col2, col3 = st.columns([1, 0.1, 1])
         with col1:
             if step == 0:
-                continue_button = st.form_submit_button("Continue to Hypothesis slide", key="continue_hypothesis")
+                continue_button = st.form_submit_button("Continue to Hypothesis slide")
             elif step == 1:
-                continue_button = st.form_submit_button("Continue to Process slide", key="continue_process")
+                continue_button = st.form_submit_button("Continue to Process slide")
             elif step == 2:
-                continue_button = st.form_submit_button("Continue to Compression conditions slide", key="continue_compression")
+                continue_button = st.form_submit_button("Continue to Compression conditions slide")
             elif step == 3:
-                continue_button = st.form_submit_button("Continue to Disintegration conditions slide", key="continue_disintegration")
+                continue_button = st.form_submit_button("Continue to Disintegration conditions slide")
         with col2:
             st.write("or")
         with col3:
-            if st.form_submit_button("Download presentation", key=f"download_presentation_{step}"):
+            if st.form_submit_button("Download presentation"):
                 download_presentation()
         return continue_button
 
